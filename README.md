@@ -18,26 +18,49 @@ Requires Java Runtime 1.7 or above
 Equipment supported by v2.6.12 below:
 
 ABX Pentra 60C+
+
 ABX MICROS 60
+
 ABX Pentra 80
+
 Selectra Junior
+
 Flexor E
+
 MINDRAY BC 3600
+
 BT3000 Plus-Chameleon
+
 Mindray BS-200E	
+
 SYSMEX XS-500i
+
 Flexor Junior
+
 GeneXpert
+
 SYSMEX XT-2000i
+
 BD FACSCalibur
+
 SYSMEX XN-1000
+
 SYSMEX KX-21N
+
 URIT-3000Plus
+
 Mindray BS-300	
+
 Selectra ProS
+
 Mindray BC-3600
+
 Mindray BC-5380
+
 URIT 5250
+
 Mindray BS-240
+
 BT3000 Plus-Envoy
+
 Mindray BC-2800
