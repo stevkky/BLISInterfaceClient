@@ -1,13 +1,9 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package TCPIP;
 
 import BLIS.sampledata;
@@ -29,7 +25,7 @@ import system.utilities;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
+ * @author GHSS-BLIS
  */
 public class SYSMEXXS500i extends Thread{
         
@@ -269,7 +265,7 @@ public class SYSMEXXS500i extends Thread{
                                     value = Float.parseFloat(msgParts[i].split("\\|")[3]);
                                 }catch(NumberFormatException e){
                                     try{
-                                    value = 0;
+                                        continue;
                                     }catch(NumberFormatException ex){}
 
                                 }
@@ -300,6 +296,7 @@ public class SYSMEXXS500i extends Thread{
         {
             log.AddToDisplay.Display("Processing Error Occured!",DisplayMessageType.ERROR);
             log.AddToDisplay.Display("Data format of Details received from Analyzer UNKNOWN",DisplayMessageType.ERROR);
+            log.logger.PrintStackTrace(ex);
         }
        
     }
@@ -359,6 +356,8 @@ public class SYSMEXXS500i extends Thread{
          int measureid = 0;
          for(int i=0;i<testIDs.size();i++)
          {
+             log.logger.Logger(testIDs.get(i));
+             //if(testIDs.get(i).split(";").length > )
              if(testIDs.get(i).split(";")[0].equalsIgnoreCase(equipmentID))
              {
                  measureid = Integer.parseInt(testIDs.get(i).split(";")[1]);

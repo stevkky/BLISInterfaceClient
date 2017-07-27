@@ -1,18 +1,14 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package TEXT;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
+ * @author GHSS-BLIS
  */
 public class settings {
     public static String BASE_DIRECTORY;
@@ -22,6 +18,7 @@ public class settings {
     public static String FILE_EXTENSION;
     public static String FILE_SEPERATOR;
     public static char SEPERATOR_CHAR;
+    public static boolean DELETE_AFTER_READ;
     
     public static void setChar(String Seperator)
     {
@@ -42,6 +39,9 @@ public class settings {
             case "SPACE":
                 SEPERATOR_CHAR =0x20;
                 break;
+            case "ASTM":
+                SEPERATOR_CHAR = 0x03;
+                        break;
                 
         }
     }

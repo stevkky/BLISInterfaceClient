@@ -1,13 +1,9 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package RS232;
 import java.io.File;
 import java.io.FileWriter;
@@ -24,9 +20,7 @@ import ui.MainForm;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
- * 
- * This is the main handler for all equipment that are interfaced using the RS232(Com port) Protocol
+ * @author BLIS
  */
 public class Manager  extends RS232Settings {
     
@@ -148,7 +142,34 @@ public class Manager  extends RS232Settings {
      {
          boolean flag = false;        
         try {
-            DataserialPort.closePort();
+                if(DataserialPort.isOpened())
+                {
+                    DataserialPort.closePort();
+                }
+            flag = true;
+        } catch (SerialPortException ex) {
+             logger.Logger(ex.getMessage());
+            log.AddToDisplay.Display(ex.getMessage(), log.DisplayMessageType.ERROR);
+        }
+         return flag;
+     }
+     
+     public static boolean ResetPort()
+     {
+         boolean flag = false;        
+        try {
+                if(DataserialPort.isOpened())
+                {
+                    DataserialPort.closePort();                    
+                }
+                
+                DataserialPort = new SerialPort(COMPORT);
+                DataserialPort.openPort(); 
+                DataserialPort.setParams(BAUD,DATABIT_LENGTH,STOPBIT,PARITY);
+                int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;//Prepare mask
+                DataserialPort.setEventsMask(mask);//Set mask
+                DataserialPort.addEventListener(new SerialPortReader());//Add SerialPortEventListener 
+                
             flag = true;
         } catch (SerialPortException ex) {
              logger.Logger(ex.getMessage());
@@ -184,10 +205,17 @@ public class Manager  extends RS232Settings {
          DataserialPort = new SerialPort(COMPORT);
            try {
             DataserialPort.openPort(); 
-            DataserialPort.setParams(BAUD,DATABIT_LENGTH,STOPBIT,PARITY,false,false);                          
-              int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR +
-                     SerialPort.MASK_BREAK + SerialPort.MASK_RING + SerialPort.MASK_RXFLAG+ SerialPort.MASK_ERR +
-                     SerialPort.MASK_RLSD + SerialPort.MASK_TXEMPTY;//Prepare mask
+            DataserialPort.setParams(BAUD,DATABIT_LENGTH,STOPBIT,PARITY,true,true);                          
+              int mask = 
+                      SerialPort.MASK_RXCHAR + 
+                      SerialPort.MASK_CTS + 
+                      SerialPort.MASK_DSR +
+                      SerialPort.MASK_BREAK + 
+                      SerialPort.MASK_RING + 
+                      SerialPort.MASK_RXFLAG + 
+                      SerialPort.MASK_ERR +
+                      SerialPort.MASK_RLSD + 
+                      SerialPort.MASK_TXEMPTY;//Prepare mask
             DataserialPort.setEventsMask(mask);//Set mask
             DataserialPort.addEventListener(new SerialPortReader());//Add SerialPortEventListener            
             
@@ -210,13 +238,20 @@ public class Manager  extends RS232Settings {
 
         @Override
         public void serialEvent(SerialPortEvent event) {
+            
+           // log.AddToDisplay.Display(event.getEventType() +"==>"+ event.toString(), log.DisplayMessageType.INFORMATION);
+             
             if(event.isRXCHAR()){//If data is available
                 //String ascii = null;              
                 String buffer="" ;
                     try {
-                        buffer = DataserialPort.readString();     
+                        //buffer = DataserialPort.readHexString();
+                       buffer = DataserialPort.readString();   
+                       // byte bytebuffer[] = DataserialPort.readBytes();   
+                        //buffer = new String(bytebuffer);   
                         if(null != buffer)
                         {
+                            
                             // byte bytebuffer[] = DataserialPort.readBytes(event.getEventValue());                    
                              // buffer = new String(bytebuffer,cs);
                              // buffer = new String(bytebuffer);          
@@ -243,8 +278,15 @@ public class Manager  extends RS232Settings {
                                 case "BT3000PLUSCHAMELEON":
                                     BT3000PlusChameleon.HandleDataInput(buffer);
                                     break;
-                                case "FLEXOR E":
-                                    FlexorE.HandleDataInput(buffer);
+                                case "SYSMEX KX-21N":
+                                    SYSMEXKX21N.HandleDataInput(buffer);
+                                    break;
+                                case "URIT-3000PLUS":
+                                    log.logger.Logger("Calling Handler");
+                                    URIT3000Plus.HandleDataInput(buffer);
+                                    break;
+                                case "MINDRAY BC-2800":
+                                    MindrayBC2800.HandleDataInput(buffer);
                                     break;
                                     
                             }
@@ -253,25 +295,29 @@ public class Manager  extends RS232Settings {
                         
                     }
                     catch (SerialPortException ex) {
-                        System.out.println(ex);
+                        logger.PrintStackTrace(ex);
                         logger.Logger(ex.getMessage());
                     } 
                
             }
             else if(event.isCTS()){//If CTS line has changed state
                 if(event.getEventValue() == 1){//If line is ON
-                    System.out.println("CTS - ON");
+                   logger.Logger("CTS - ON");
+                   log.AddToDisplay.Display("CTS - ON", log.DisplayMessageType.WARNING);
                 }
                 else {
-                    System.out.println("CTS - OFF");
+                    logger.Logger("CTS - OFF");
+                    log.AddToDisplay.Display("CTS - OFF", log.DisplayMessageType.WARNING);
                 }
             }
             else if(event.isDSR()){///If DSR line has changed state
                 if(event.getEventValue() == 1){//If line is ON
-                    System.out.println("DSR - ON");
+                    logger.Logger("DSR - ON");
+                    log.AddToDisplay.Display("DSR - ON", log.DisplayMessageType.WARNING);
                 }
                 else {
-                    System.out.println("DSR - OFF");
+                    logger.Logger("DSR - OFF");
+                    log.AddToDisplay.Display("DSR - OFF", log.DisplayMessageType.WARNING);
                 }
             }
         }

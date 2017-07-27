@@ -1,13 +1,9 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package RS232;
 
 
@@ -27,7 +23,7 @@ import log.DisplayMessageType;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
+ * @author BLIS
  */
 public class SelectraJunior extends Thread {
     
@@ -50,13 +46,23 @@ public class SelectraJunior extends Thread {
            log.AddToDisplay.Display(ports[i],log.DisplayMessageType.INFORMATION);
         }            
        log.AddToDisplay.Display("Now connecting to port "+RS232Settings.COMPORT , DisplayMessageType.TITLE);
+       
+       /*testing
+       
+       
+            setTestIDs();
+           setCalcTestIDs();
+           TestStart = Integer.parseInt(getSpecimenFilter(7));        
+           SelectraJunior.HandleDataInput("{R;JUNIOR;N;20160608056 ;HENAKU OBENG        ;           ;M; 7;AST ;78.5   ;                N      ;H  ;U/l   ;ALT ;53.4   ;                N      ;H  ;U/l   ;ALP ;210.8  ;                       ;   ;U/l   ;GGT ;132.2  ;                N      ;H  ;U/l   ;TBIL;8.0    ;                       ;   ;umol/l;ALB ;44.6   ;                       ;   ;g/l   ;TPRO;85.1   ;                N      ;H  ;g/l   ;}");
+           */
+           
        if(Manager.openPortforData("Selectra Junior"))
        {
            log.AddToDisplay.Display("Connected sucessfully",DisplayMessageType.INFORMATION);   
            setTestIDs();
            setCalcTestIDs();
            TestStart = Integer.parseInt(getSpecimenFilter(7));        
-           //SelectraJunior.HandleDataInput("{R;JUNIOR;N;2014110403  ;                    ;           ;M; 5;UREA;4.9    ;                       ;mmol/l;CREA;25     ;                N      ;umol/l;HDL ;0.55   ;            D   N      ;mmol/l;TRIG;1.79   ;                N      ;mmol/l;CHOL;3.7    ;                       ;mmol/l;}");
+           
        }      
        
       
@@ -145,11 +151,11 @@ public class SelectraJunior extends Thread {
                                 
                                 value = Float.parseFloat(String.valueOf(engine.eval(calctestIDs.get(i).split(";")[1])));
                             }catch(NumberFormatException e){
-                                value = 0;
+                                continue;
                             } catch (ScriptException ex) {
                                 log.logger.Logger("Could not perform calculation:"+calctestIDs.get(i).split(";")[1]);
                                 //log.logger.PrintStackTrace(ex);
-                                value = 0;
+                                continue;
                             }
                             //PrepareCalcTests(DataParts[i].trim(),value);
                             if(SaveResults(specimen_id, mID,value))

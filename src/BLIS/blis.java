@@ -1,13 +1,9 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package BLIS;
 
 import hl7.Mindray.Message;
@@ -23,9 +19,7 @@ import system.settings;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
- * 
- * This file is responsible for sending and retrieving data from BLIS through BLIS HTTP API
+ * @author GHSS-BLIS
  */
 public class blis {
     
@@ -51,7 +45,7 @@ public class blis {
         try 
         {  
                 String url = settings.BLIS_URL;
-                url = url + "api/get_test_types.php?username="+settings.BLIS_USERNAME + "&password="+settings.BLIS_PASSWORD;           
+                url = url + "api/get_test_types.php?username="+URLEncoder.encode(settings.BLIS_USERNAME,"UTF-8") + "&password="+URLEncoder.encode(settings.BLIS_PASSWORD,"UTF-8");           
                 url = url + "&specimenfilter="+specimenTypeFilter;
                 url = url + "&testfilter="+specimenTestFilter;  
                 url = url + "&day="+DAYS; 
@@ -126,14 +120,16 @@ public class blis {
         try 
         {  
                 String url = settings.BLIS_URL;
-                url = url + "api/update_result.php?username="+settings.BLIS_USERNAME + "&password="+settings.BLIS_PASSWORD;           
+                url = url + "api/update_result.php?username="+
+                        URLEncoder.encode(settings.BLIS_USERNAME,"UTF-8") + "&password="+
+                        URLEncoder.encode(settings.BLIS_PASSWORD,"UTF-8");           
                 url = url + "&specimen_id="+URLEncoder.encode(specimenID,"UTF-8");
                 url = url + "&measure_id="+measureID;
                 url = url + "&result="+URLEncoder.encode(result,"UTF-8");
                 url = url + "&dec=0"; 
                   
                  
-                
+               // log.logger.Logger(url);
                 URL burl = new URL(url);  
                  
                  try (BufferedReader in = new BufferedReader(new InputStreamReader(burl.openStream()))) 
@@ -164,7 +160,9 @@ public class blis {
         try 
         {  
                 String url = settings.BLIS_URL;
-                url = url + "api/update_result.php?username="+settings.BLIS_USERNAME + "&password="+settings.BLIS_PASSWORD;           
+                url = url + "api/update_result.php?username="+
+                        URLEncoder.encode(settings.BLIS_USERNAME,"UTF-8") + "&password="+
+                        URLEncoder.encode(settings.BLIS_PASSWORD,"UTF-8");           
                 url = url + "&specimen_id="+URLEncoder.encode(specimenID,"UTF-8");
                 url = url + "&measure_id="+measureID;
                 url = url + "&result="+result;  
@@ -206,7 +204,9 @@ public class blis {
         try 
         {  
                 String url = settings.BLIS_URL;
-                url = url + "api/update_result.php?username="+settings.BLIS_USERNAME + "&password="+settings.BLIS_PASSWORD;           
+                url = url + "api/update_result.php?username="+
+                        settings.BLIS_USERNAME + "&password="+
+                        settings.BLIS_PASSWORD;           
                 url = url + "&specimen_id="+specimenID;
                 url = url + "&measure_id="+measureID;
                 url = url + "&result="+result;               
@@ -214,6 +214,7 @@ public class blis {
                 
                 URL burl = new URL(url);  
                  
+                log.logger.Logger(url);
                  try (BufferedReader in = new BufferedReader(new InputStreamReader(burl.openStream()))) 
                   {
                       String line;  
@@ -229,6 +230,7 @@ public class blis {
         } catch (MalformedURLException ex) {
             Logger.getLogger(blis.class.getName()).log(Level.SEVERE, null, ex);
             log.logger.Logger(ex.getMessage());
+            log.logger.PrintStackTrace(ex);
         }
          return data.trim();        
          

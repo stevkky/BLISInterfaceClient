@@ -1,18 +1,14 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package system;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
+ * @author BLIS
  */
 public class settings {
     public static String BLIS_URL;
@@ -20,7 +16,7 @@ public class settings {
     public static String BLIS_USERNAME;       
     public static boolean ENABLE_LOG;
     public static boolean WRITE_TO_FILE;
-    public static final String VERSION = "2.6.12";
+    public static final String VERSION = "3.0";
     public static int POOL_DAY;
     public static int POOL_INTERVAL;
     public static boolean ENABLE_AUTO_POOL;

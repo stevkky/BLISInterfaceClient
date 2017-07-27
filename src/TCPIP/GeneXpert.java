@@ -1,13 +1,9 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package TCPIP;
 
 import BLIS.sampledata;
@@ -30,7 +26,7 @@ import ui.MainForm;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
+ * @author BLIS
  */
 public class GeneXpert extends Thread{
         
@@ -376,9 +372,20 @@ public class GeneXpert extends Thread{
                         {
                             if("Q".equals(pidParts[0].trim()))
                             {
-                                 String patientid = pidParts[2].split("\\^")[0].trim();                                 
-                                 String SampleID = pidParts[2].split("\\^")[1].trim();
-                                 getBLISTests(SampleID,true);
+                                 String patientid = pidParts[2].split("\\^")[0].trim();   
+                                 if(!patientid.equalsIgnoreCase("ALL"))
+                                 {
+                                    String SampleID = pidParts[2].split("\\^")[1].trim();
+                                    getBLISTests(SampleID,true);
+                                 }
+                                 else
+                                 {
+                                     appMode = MODE.SENDING_QUERY;
+                                     AddtoQueue(ENQ);
+                                     noDataResponse();
+                                     log.AddToDisplay.Display("Fetching of All samples not enabled",DisplayMessageType.INFORMATION);
+                                      appMode = MODE.IDLE;
+                                 }
                                   
                             }
                             else if("C".equals(pidParts[0].trim()))
@@ -393,10 +400,14 @@ public class GeneXpert extends Thread{
                             else
                             {
                                 pidParts = msgParts[2].split("\\|");
-                                String patientid = pidParts[2].split("\\^")[0].trim();
+                                String patientid = msgParts[1].split("\\|")[4].trim();
+                                
                                 String SampleID = pidParts[2].split("\\^")[0].trim(); 
-                                //SampleID = utilities.getSystemDate("YYYY") + SampleID;
-                                //SampleID =  patientid;
+                                if(SampleID.length() < 5)
+                                {
+                                   SampleID = patientid;
+                                }
+                                
                                 int mID=0;
                                 String value = "";
                                 boolean flag = false;
@@ -406,7 +417,8 @@ public class GeneXpert extends Thread{
                                     {
                                         if(msgParts[resultslocs[i]].split("\\|")[0].endsWith("R"))
                                         {
-                                            mID = getMeasureID(msgParts[resultslocs[i]].split("\\|")[2].split("\\^")[3].trim());
+                                           // mID = getMeasureID(msgParts[resultslocs[i]].split("\\|")[2].split("\\^")[3].trim());
+                                            mID = Integer.parseInt(msgParts[resultslocs[i]].split("\\|")[2].split("\\^")[3].trim());
                                             if(mID > 0)
                                             {
                                                 try
@@ -521,6 +533,7 @@ public class GeneXpert extends Thread{
             
         }catch(Exception ex)
         {
+            ASTMMsgs ="";
             log.AddToDisplay.Display("Processing Error Occured!",DisplayMessageType.ERROR);
             log.AddToDisplay.Display("Data format of Details received from Analyzer UNKNOWN",DisplayMessageType.ERROR);
             log.logger.PrintStackTrace(ex);

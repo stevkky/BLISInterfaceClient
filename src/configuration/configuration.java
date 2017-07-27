@@ -1,14 +1,10 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
- */
 package configuration;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 
 import java.io.File;
@@ -19,9 +15,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
- * 
- * Configuration for data elements in the main configuration file (BLISInterfaceClient.ini)
+ * @author BLIS
  */
 public class configuration {
     
@@ -50,6 +44,8 @@ public class configuration {
     public static final String EQUIPMENT_IP ="EQUIPMENT_IP";
     public static final String COMMENT_CHAR =";";
     
+    //for global access
+    public static String EQUIPMENT_NAME;
     
     public static String GetParameterValue(String param)
     {        

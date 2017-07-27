@@ -1,19 +1,16 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package ui;
 
 import  RS232.*;
 import TCPIP.*;
 import MSACCESS.*;
 import TEXT.BDFACSCalibur;
+import TEXT.BT3000PlusChameleonEnvoy;
 import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.MenuItem;
@@ -33,7 +30,7 @@ import system.*;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
+ * @author BLIS
  */
 public class MainForm extends javax.swing.JFrame {
 
@@ -58,17 +55,33 @@ public class MainForm extends javax.swing.JFrame {
     MICROS60 abx = null;
     MSACCESSABXPentra60CPlus msaccess_abx = null;
     TCPIP.BT3000PlusChameleon btobj = null;
-    RS232.BT3000PlusChameleon btRSobj = null; 
+    RS232.BT3000PlusChameleon btRSobj = null;
+    TEXT.BT3000PlusChameleon btTXTobj = null;
+    TEXT.SelectraJunior txtSelobj = null;
     SYSMEXXS500i sysobj = null; 
     BDFACSCalibur bdobj = null;
     SelectraJunior selobj = null;
     ABXPentra80 pentra80Obj = null;
     CobasAmpliPrep cobasObj = null;
-    MindrayBC3600 minbc3600obj = null;
+    RS232.MindrayBC3600 minbc3600obj = null;
     GeneXpert expobj = null;
     SYSMEXXT2000i sys2000iObj = null;
-    FlexorE flexObj = null;
-   //public static boolean reset = false;
+    FlexorJunior flexjobj = null;
+    SYSMEXXN1000 sys1000obj = null;
+    BT3000PlusChameleon1_0_7 sysobjC1_0_7 = null;
+    SYSMEXKX21N objsysKS21 = null;
+    URIT3000Plus objUrit3000plus = null;
+    MindrayBS300 objminbs300 = null;
+    SelectraProS selproSObj = null;
+    TCPIP.MindrayBC3600 objmin3600 = null;
+    TCPIP.MindrayBC5380 objmin5380 = null;
+    TCPIP.URIT5250 objurit5250 = null;
+    TCPIP.MindrayBS240 objminbs240 = null;
+    TEXT.BT3000PlusChameleonEnvoy objbtenvoy = null;
+    MindrayBC2800 objmin2800 = null;
+    BT3000Plus objbt3000 = null;
+
+    //public static boolean reset = false;
    public static enum RESET
    {
        WAIT,
@@ -408,6 +421,10 @@ public class MainForm extends javax.swing.JFrame {
                         log.AddToDisplay.Display("Manual Download from BLIS Sample Code:"+jtxtManualBarcode.getText(),log.DisplayMessageType.TITLE);                     
                        new ABXPentra80().getFromBlis(jtxtManualBarcode.getText());                 
                         break;
+                    case "BT3000 Plus":
+                        log.AddToDisplay.Display("Manual Download from BLIS Sample Code:"+jtxtManualBarcode.getText(),log.DisplayMessageType.TITLE);                     
+                       new BT3000Plus().getBLISTests(jtxtManualBarcode.getText(),true);                 
+                        break;
                 }
             case "TCP/IP":
                 switch(jlblEquipment.getText())
@@ -477,6 +494,9 @@ public class MainForm extends javax.swing.JFrame {
                     case "ABX MICROS 60":                        
                         abx.Stop();
                         break;
+                    case "SYSMEX KX-21N":
+                        objsysKS21.Stop();
+                        break;
                     case "SELECTRA JUNIOR":                       
                         selobj.Stop();
                         break;
@@ -489,31 +509,30 @@ public class MainForm extends javax.swing.JFrame {
                       case "BT3000 PLUS-CHAMELEON":
                           btRSobj.Stop();
                           break;
-                      case "FLEXOR E":
-                          flexObj.Stop();
-                          break;
+                      case "URIT-3000PLUS":                     
+                        objUrit3000plus.Stop();
+                        break;
+                      case "MINDRAY BC-2800":                        
+                        objmin2800.Stop();
+                        break;
+                      case "BT3000 PLUS":                       
+                        objbt3000.Stop();
+                        break;
                     
                 }
             case "TCP/IP":
                 switch(jlblEquipment.getText().toUpperCase())
                 {
-                    case "MINDRAY BS-120":
-                    case "MINDRAY BS-130":
-                    case "MINDRAY BS-180":                    
-                    case "MINDRAY BS-190":
-                    case "MINDRAY BS-200":
-                    case "MINDRAY BS-220":
                     case "MINDRAY BS-200E":
-                    case "MINDRAY BS-220E":
-                    case "MINDRAY BS-330":
-                    case "MINDRAY BS-350":                    
-                    case "MINDRAY BS-330E":
-                    case "MINDRAY BS-350E":          
-                        obj.Stop();                     
+                      obj.Stop();                     
                         break;
                     case "BT3000 PLUS-CHAMELEON":                      
                        btobj.Stop();
                         break;
+                    case "BT3000PLUSCHAMELEON V1.0.7":                      
+                       sysobjC1_0_7.Stop();
+                        break;
+                         
                     case "SYSMEX XS-500I":                        
                         sysobj.Stop();
                         break;
@@ -526,6 +545,30 @@ public class MainForm extends javax.swing.JFrame {
                     case "SYSMEX XT-2000I":
                         sys2000iObj.Stop();
                         break;
+                    case "FLEXOR JUNIOR":                       
+                        flexjobj.Stop();
+                        break;
+                    case "SYSMEX XN-1000":                       
+                        sys1000obj.Stop();
+                        break;
+                    case "MINDRAY BS-300":                        
+                         objminbs300.Stop();
+                         break;
+                     case "SELECTRA PROS":                        
+                         selproSObj.Stop();
+                         break;
+                     case "MINDRAY BC-3600":                      
+                       objmin3600.Stop();
+                        break;
+                     case "MINDRAY BC-5380":                      
+                       objmin5380.Stop();
+                        break;
+                     case "URIT 5250":                         
+                          objurit5250.Stop();
+                       break;
+                     case "MINDRAY BS-240":                          
+                          objminbs240.Stop();
+                          break;
                 }
                 break;
             case "MSACCESS":
@@ -542,7 +585,15 @@ public class MainForm extends javax.swing.JFrame {
                     case "BD FACSCALIBUR":                        
                         bdobj.Stop();
                         break;
-                    
+                     case "BT3000 PLUS-CHAMELEON":                        
+                        btTXTobj.Stop();
+                        break;
+                     case "SELECTRA JUNIOR":
+                         txtSelobj.Stop();
+                         break;
+                     case "BT3000 PLUS-ENVOY":                        
+                        objbtenvoy.Stop();
+                        break;
                 }
                  break;
         }
@@ -558,6 +609,10 @@ public class MainForm extends javax.swing.JFrame {
                         abx  = new MICROS60();
                         abx.start();                          
                         break;
+                    case "SYSMEX KX-21N":
+                        objsysKS21 = new SYSMEXKX21N();
+                        objsysKS21.start();
+                        break;
                     case "SELECTRA JUNIOR":
                         selobj = new SelectraJunior();
                         selobj.start();
@@ -567,40 +622,42 @@ public class MainForm extends javax.swing.JFrame {
                         pentra80Obj.start();
                         break;
                     case "MINDRAY BC 3600":
-                        minbc3600obj = new MindrayBC3600();
+                        minbc3600obj = new RS232.MindrayBC3600();
                         minbc3600obj.start();
                         break;     
                     case "BT3000 PLUS-CHAMELEON":
                           btRSobj = new RS232.BT3000PlusChameleon();
                           btRSobj.start();
                           break;
-                     case "FLEXOR E":
-                          flexObj = new FlexorE();
-                          flexObj.start();
-                          break;
+                    case "URIT-3000PLUS":
+                        objUrit3000plus = new URIT3000Plus();
+                        objUrit3000plus.start();
+                        break;
+                    case "MINDRAY BC-2800":
+                        objmin2800 = new MindrayBC2800();
+                        objmin2800.start();
+                        break;
+                    case "BT3000 PLUS":
+                       objbt3000 = new BT3000Plus();
+                        objbt3000.start();
+                        break;
+
                 }
             break;
             case "TCP/IP":
                 switch(jlblEquipment.getText().toUpperCase())
                 {
-                    case "MINDRAY BS-120":
-                    case "MINDRAY BS-130":
-                    case "MINDRAY BS-180":                    
-                    case "MINDRAY BS-190":
-                    case "MINDRAY BS-200":
-                    case "MINDRAY BS-220":
                     case "MINDRAY BS-200E":
-                    case "MINDRAY BS-220E":
-                    case "MINDRAY BS-330":
-                    case "MINDRAY BS-350":                    
-                    case "MINDRAY BS-330E":
-                    case "MINDRAY BS-350E":                  
-                       obj = new MindrayBS200E(jlblEquipment.getText());
+                       obj = new MindrayBS200E();
                        obj.start();                       
                         break;
                     case "BT3000 PLUS-CHAMELEON":
                        btobj = new TCPIP.BT3000PlusChameleon();
                        btobj.start();
+                        break;
+                    case "BT3000PLUSCHAMELEON V1.0.7":                      
+                        sysobjC1_0_7 = new TCPIP.BT3000PlusChameleon1_0_7();
+                        sysobjC1_0_7.start();
                         break;
                     case "SYSMEX XS-500I":
                         sysobj = new SYSMEXXS500i();
@@ -618,6 +675,40 @@ public class MainForm extends javax.swing.JFrame {
                         sys2000iObj = new SYSMEXXT2000i();
                         sys2000iObj.start();
                         break;
+                     case "FLEXOR JUNIOR":
+                        flexjobj = new FlexorJunior();
+                        flexjobj.start();
+                        break;
+                     case "SYSMEX XN-1000":
+                        sys1000obj = new SYSMEXXN1000();
+                        sys1000obj.start();
+                        break;
+                     case "MINDRAY BS-300":
+                         objminbs300 = new MindrayBS300();
+                         objminbs300.start();
+                         break;
+                     case "SELECTRA PROS":
+                         selproSObj = new SelectraProS();
+                         selproSObj.start();
+                         break;
+                      case "MINDRAY BC-3600":
+                       objmin3600 = new TCPIP.MindrayBC3600();
+                       objmin3600.start();                       
+                        break;
+                      case "MINDRAY BC-5380":
+                       objmin5380 = new TCPIP.MindrayBC5380();
+                       objmin5380.start();                       
+                        break;
+                      case "URIT 5250":
+                          objurit5250 = new URIT5250();
+                          objurit5250.start();
+                          break;
+                      case "MINDRAY BS-240":
+                          objminbs240 = new MindrayBS240();
+                          objminbs240.start();
+                          break;
+                          
+                          
                 }
                 break;
              case "MSACCESS":
@@ -633,9 +724,21 @@ public class MainForm extends javax.swing.JFrame {
                 switch(jlblEquipment.getText().toUpperCase())
                 {
                     case "BD FACSCALIBUR":
-                    bdobj = new BDFACSCalibur();
-                    bdobj.start();
-                    break;                   
+                        bdobj = new BDFACSCalibur();
+                        bdobj.start();
+                        break;
+                    case "BT3000 PLUS-CHAMELEON":
+                        btTXTobj = new TEXT.BT3000PlusChameleon();
+                        btTXTobj.start();
+                        break;
+                    case "SELECTRA JUNIOR": 
+                        txtSelobj = new TEXT.SelectraJunior();
+                        txtSelobj.start();
+                           break;
+                    case "BT3000 PLUS-ENVOY":
+                        objbtenvoy = new BT3000PlusChameleonEnvoy();
+                        objbtenvoy.start();
+                        break;
                 }
                  break;
         }
@@ -680,7 +783,7 @@ public class MainForm extends javax.swing.JFrame {
          equipment = configuration.configuration.GetParameterValue(configuration.configuration.EQUIPMENT);
          jlblEquipment.setText(equipment);
          trayIcon.setToolTip(trayIcon.getToolTip()+" ("+equipment +" handler)");
-          
+         configuration.configuration.EQUIPMENT_NAME = equipment;
          
           value = configuration.configuration.GetParameterValue(configuration.configuration.MISCELLANEOUS);
           String[] misc = value.split(",");
@@ -802,6 +905,9 @@ public class MainForm extends javax.swing.JFrame {
              case "AUTO_SPECIMEN_ID":
                  settings.AUTO_SPECIMEN_ID = data[1].equalsIgnoreCase("yes");
                  break;
+             case "DELETE_AFTER_READ":
+                  TEXT.settings.DELETE_AFTER_READ = data[1].equalsIgnoreCase("yes");
+                 break;
                          
                  
                 
@@ -820,6 +926,10 @@ public class MainForm extends javax.swing.JFrame {
                 switch(jlblEquipment.getText())
                 {
                     case "ABX Pentra 80":
+                        toggleManualActivity(true);
+                        jbtnSend.setEnabled(false);
+                        break;
+                     case "BT3000 Plus":
                         toggleManualActivity(true);
                         jbtnSend.setEnabled(false);
                         break;

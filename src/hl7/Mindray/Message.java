@@ -1,13 +1,9 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package hl7.Mindray;
 
 import BLIS.sampledata;
@@ -18,7 +14,7 @@ import system.utilities;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
+ * @author BLIS
  */
 public class Message {
     
@@ -100,7 +96,11 @@ public class Message {
         for(;i<=seg.fieldlength;i++)
         {
             String field = getValue(seg,i);
-            if(field.isEmpty())
+            if(null == field)
+            {
+                break;
+            }
+            if( field.isEmpty())
                  value.append("|");
             else
                 value.append("|").append(field);
@@ -171,8 +171,15 @@ public class Message {
                     //String [] testnamepart = normalisedResults.get(k).testname.split(",");
                     for(int mt =0,tid=29; mt < testidpart.length;mt++,tid++)
                     { 
-                        
-                        Messagebuff.append("DSP|").append(tid).append("||").append(testidpart[mt]).append("^^^").append("|||"); 
+                        switch(configuration.configuration.EQUIPMENT_NAME) 
+                        {
+                            case "Mindray BS-300":                                
+                                Messagebuff.append("DSP|").append(tid).append("||").append(TCPIP.MindrayBS300.getEquipmentTestID(testidpart[mt])).append("^^^").append("|||");
+                                break;
+                             default:
+                                 Messagebuff.append("DSP|").append(tid).append("||").append(testidpart[mt]).append("^^^").append("|||");
+                                 break;
+                        }                        
                         Messagebuff.append(blocks.CARRIAGE_RETURN);
                     }
                 }

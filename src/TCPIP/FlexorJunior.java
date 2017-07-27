@@ -1,13 +1,9 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package TCPIP;
 
 import BLIS.sampledata;
@@ -21,37 +17,57 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import log.DisplayMessageType;
 import system.SampleDataJSON;
 import system.utilities;
+import ui.MainForm;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
+ * @author GHSS-BLIS
  */
 public class FlexorJunior extends Thread{
         
-    private static List<String> testIDs = new ArrayList<>();
-    String read;
+   String read;
     boolean first =true;   
-    DataOutputStream outToEquipment=null;
+    static DataOutputStream outToEquipment=null;
     ServerSocket welcomeSocket=null;
     Socket connSock = null;
     Iterator list= null;
     static Queue<String> OutQueue=new LinkedList<>();
-    static final char CARRIAGE_RETURN = 13; 
-    
+    private static List<String> testIDs = new ArrayList<>();
+    private static Queue<String> PatientTest = new LinkedList<>();
+    private static String ASTMMsgs ="";
+     
     boolean stopped = false;
     //Queue<String> InQueue=new LinkedList<>();
-  
-    
-     public enum  MSGTYPE
+    private static final char CARRIAGE_RETURN = 13; 
+    private static final char STX = 0x02;
+    private static final char ACK = 0x06;
+    private static final char EOT = 0x04;
+    private static final char NAK = 0x15;
+    private static final char NUL = 0x00;
+    private static final char ENQ = 0x05;
+    private static final char ETX = 0x03;
+    private static final char CR = 0x0D;
+    private static final char LF = 0x0A;
+    private static final char ETB = 0x17;
+   
+    private static MODE appMode = MODE.IDLE;
+    public enum  MSGTYPE
     {
         QUERY(0),
         RESULTS(1),
-        ACK_RECEIVED(3),
+        ACK_RECEIVED(2),
+        ACK(3),
+        ENQ(4),
+        NAK(5),
+        EOT(6),
+        STX(7),
+        ETX(8),
         UNKNOWN(-1);
        
         
@@ -63,8 +79,13 @@ public class FlexorJunior extends Thread{
         private int Value;
         
     }
-   
-   
+    
+   enum MODE
+   {
+       SENDING_QUERY,
+       RECEIVEING_RESULTS,
+       IDLE;
+   }
     public void Stop()
     {
         try {
@@ -72,51 +93,71 @@ public class FlexorJunior extends Thread{
             stopped = true;
             if(null != connSock)
                 connSock.close();
-            
-            welcomeSocket.close();
+            if(null !=welcomeSocket)
+                 welcomeSocket.close();
 //            connSock.close();
-             log.AddToDisplay.Display("FLEXOR JUNIOR handler stopped", DisplayMessageType.TITLE);
+             log.AddToDisplay.Display("flexor junior handler stopped", DisplayMessageType.TITLE);
         } catch (IOException ex) {
-            Logger.getLogger(BT3000PlusChameleon.class.getName()).log(Level.SEVERE, null, ex);
+            log.logger.Logger(ex.getMessage());
         }
         
     }
       @Override
-    public void run() {
-        log.AddToDisplay.Display("FLEXOR JUNIOR handler started...", DisplayMessageType.TITLE);
-        log.AddToDisplay.Display("Starting Server scoket on port "+tcpsettings.PORT, DisplayMessageType.INFORMATION);
+    public void run() {             
          
         try
         {
+            log.AddToDisplay.Display("Flexor Junior handler started...", DisplayMessageType.TITLE); 
+           
+           /* /////
+            setTestIDs();
+            FlexorJunior.process();
+            ////////////////*/
+            
+            if(tcpsettings.SERVER_MODE)
+            {                
+                log.AddToDisplay.Display("Starting Server socket on port "+tcpsettings.PORT, DisplayMessageType.INFORMATION);
                 welcomeSocket = new ServerSocket(tcpsettings.PORT);
   		log.AddToDisplay.Display("Waiting for Equipment connection...", DisplayMessageType.INFORMATION);
   		log.AddToDisplay.Display("Listening on port "+ tcpsettings.PORT+"...",DisplayMessageType.INFORMATION);
-                connSock = welcomeSocket.accept();                
-                log.AddToDisplay.Display("FLEXOR JUNIOR is now Connected...",DisplayMessageType.INFORMATION);
+                connSock = welcomeSocket.accept();  
+                
+               
+            }
+            else
+            {
+                log.AddToDisplay.Display("Starting Client socket on IP "+tcpsettings.EQUIPMENT_IP +" on port  "+tcpsettings.PORT, DisplayMessageType.INFORMATION);
+               connSock = new Socket(tcpsettings.EQUIPMENT_IP, tcpsettings.PORT);
+            }
+                log.AddToDisplay.Display("Flexor Junior is now Connected...",DisplayMessageType.INFORMATION);
                 first=false;
+                if(!tcpsettings.SERVER_MODE)
+                {
+                    connSock.setKeepAlive(true);
+                }
                 ClientThread client = new ClientThread(connSock,"FLEXOR JUNIOR");
                 client.start();
                 String message ;
                 outToEquipment= new DataOutputStream(connSock.getOutputStream());
-                setTestIDs();
+                 setTestIDs();
                 while(!stopped)
                 {                 
                     synchronized(OutQueue)
                     {                        
                         while(!OutQueue.isEmpty())
                         {
-                            //System.out.println("Message found in sending queue");
-                            log.AddToDisplay.Display("Message found in sending queue",DisplayMessageType.TITLE);
+                           // System.out.println("Message found in sending queue");
+                           // log.AddToDisplay.Display("Message found in sending queue",DisplayMessageType.TITLE);
                             //log.logger.Logger("Message found in sending queue");
                             message =(String) OutQueue.poll();                             
                             outToEquipment.writeBytes(message);
                             //System.out.println(message+ "sent sucessfully");
-                            log.AddToDisplay.Display(message+ "sent successfully",DisplayMessageType.INFORMATION);
+                            log.AddToDisplay.Display("[ "+message+ " ] sent successfully",DisplayMessageType.INFORMATION);
                             //log.logger.Logger(message+ "sent sucessfully");
                         }
-                    }                    
-                   
+                    }
                     
+                
                 }
 
 
@@ -125,7 +166,10 @@ public class FlexorJunior extends Thread{
          {
                 if(first)
 		{
-                    log.AddToDisplay.Display("could not listen on port :"+tcpsettings.PORT + " "+e.getMessage(),DisplayMessageType.ERROR);
+                    if(tcpsettings.SERVER_MODE)
+                        log.AddToDisplay.Display("could not listen on port :"+tcpsettings.PORT + " "+e.getMessage(),DisplayMessageType.ERROR);
+                    else
+                        log.AddToDisplay.Display("could not connect to server: "+tcpsettings.EQUIPMENT_IP+" on port :"+tcpsettings.PORT + " "+e.getMessage(),DisplayMessageType.ERROR);
                    // log.logger.Logger(e.getMessage());
 		}
 		else
@@ -139,167 +183,362 @@ public class FlexorJunior extends Thread{
        
     }
     
-    private static void getBLISTests(String aux_id, boolean flag, String[] query)
+    public void getFromBlis(String barcode)
+     {   
+         
+       getBLISTests(barcode,true);
+        
+     }
+    
+    private static void resetCon()
+    {
+        /* if(!tcpsettings.SERVER_MODE)
+               {
+                 stopped = true;
+                 if(null != connSock)
+                 try {
+                     connSock.close();
+                 } catch (IOException ex) {
+                     Logger.getLogger(BT3000PlusChameleon.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+                   MainForm.btobj = new BT3000PlusChameleon();
+                   MainForm.btobj.start();
+               }*/
+    }
+   private static void getBLISTests(String aux_id, boolean flag)
      {
          try
          {
-            String data = BLIS.blis.getTestData(getSpecimenFilter(2), getSpecimenFilter(1),aux_id);
+            String data = BLIS.blis.getSampleData(aux_id,"","",getSpecimenFilter(2), getSpecimenFilter(4));
             List<sampledata> SampleList = SampleDataJSON.getSampleObject(data);
             SampleList = SampleDataJSON.normaliseResults(SampleList);
             if(SampleList.size() > 0)
             {            
                 for (int i=0;i<SampleList.size();i++) 
-                {               
-
+                { 
+                    appMode = MODE.SENDING_QUERY;                    
                        log.AddToDisplay.Display("Sending test with Code: "+SampleList.get(i).aux_id + " to FLEXOR JUNIOR",DisplayMessageType.INFORMATION);
-                        AddtoQueue(SampleList.get(i),query,false);                   
+                       prepare(SampleList.get(i)); 
+                       AddtoQueue(ENQ);
+                       /*while(appMode != MODE.IDLE)
+                       {
+                           Thread.sleep(100);
+                       }*/
+                       
                 }
 
             }
              else
               {
-                  AddtoQueue(null, query, true);
-                 if(flag)                         
-                   log.AddToDisplay.Display("Sample with barcode: "+aux_id +" does not exist in BLIS",DisplayMessageType.INFORMATION);
+                 // AddtoQueue(null, query);
+                  appMode = MODE.SENDING_QUERY;
+                  AddtoQueue(ENQ);
+                  noDataResponse();
+                 if(flag)   
+                 {
+                   log.AddToDisplay.Display("Sample with code: "+aux_id +" does not exist in BLIS",DisplayMessageType.ERROR);
+                 }
              }
          }catch(Exception ex)
          {
              log.logger.PrintStackTrace(ex);
          }
      }
+   
+   private static boolean sendNow(String message)
+   {
+       boolean status = false;
+        try {
+            outToEquipment.writeBytes(message);
+        } catch (IOException ex) {
+            Logger.getLogger(FlexorJunior.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       log.AddToDisplay.Display("[ "+message+ " ] sent successfully",DisplayMessageType.INFORMATION);
+       
+       return status;
+   }
+   private static void AddtoQueue(char value) 
+   {
+       synchronized(OutQueue)
+        {
+            if(!OutQueue.isEmpty())
+            {
+                if(OutQueue.peek().charAt(0) != value)
+                OutQueue.add(String.valueOf(value));
+            }
+            else
+            {
+                OutQueue.add(String.valueOf(value));
+            }
+            //log.logger.Logger("New message added to sending queue\n"+value);                                                          
+       }
+       
+   }
+   private static void noDataResponse()
+   {
+       Random rand = new Random();
+
+       PatientTest.clear();
+       StringBuffer strData = new StringBuffer();
+       strData.append(STX); 
+       StringBuffer strTemp = new StringBuffer();
+       strTemp.append("1H|@^\\|");
+       strTemp.append(rand.nextInt(999999));
+       strTemp.append("||BLIS|||||FLEXORJUNIOR PC^FLEXORJUNIOR^4.3||P|1394-97|");       
+       strTemp.append(utilities.getSystemDate("yyyyMMddHHmmss"));
+       strTemp.append(CR);   
+       strTemp.append("L");
+       strTemp.append("|");
+       strTemp.append(1);
+       strTemp.append("|I");
+       strTemp.append(CR);            
+       strTemp.append(ETX);  
+       strData.append(strTemp.toString());
+       strData.append(utilities.getCheckSum(strTemp.toString()));
+       strData.append(CR);
+       strData.append(LF); 
+       PatientTest.add(strData.toString());  
+   }
+   private static void prepare(sampledata get)
+   {
+       Random rand = new Random();
+
+       PatientTest.clear();
+       StringBuffer strData = new StringBuffer();
+       strData.append(STX); 
+       StringBuffer strTemp = new StringBuffer();
+       strTemp.append("1H|@^\\|");
+       strTemp.append(rand.nextInt(999999));
+       strTemp.append("||BLIS|||||FLEXORJUNIOR PC^FLEXORJUNIOR^4.3||P|1394-97|");       
+       strTemp.append(utilities.getSystemDate("yyyyMMddHHmmss"));
+       strTemp.append(CR);   
+       strTemp.append("P|1|||");
+       strTemp.append(get.surr_id);
+       strTemp.append(CR);        
+       String[] testparts = get.test_type_id.split(","); 
+       String[] measureIDs = get.measure_id.split(","); 
+       int j=3;
+       for(int i=0;i<measureIDs.length;i++,j++)
+       {           
+           if(j > 7)
+               j=0;           
+            strTemp.append("O");
+            strTemp.append("|");
+            strTemp.append(i+1);
+            strTemp.append("|");
+            strTemp.append(get.aux_id);
+            strTemp.append("||^^^");
+           // strTemp.append(testparts[i]);
+            strTemp.append(getEquipmentID(measureIDs[i]));
+            strTemp.append("|R|");
+            strTemp.append(utilities.getSystemDate("yyyyMMddHHmmss"));
+            strTemp.append("|||||A||||ORH||||||||||Q");
+            strTemp.append(CR);          
+                               
+       }
+            strTemp.append("L");
+            strTemp.append("|");
+            strTemp.append(1);
+            strTemp.append("|N");
+            strTemp.append(CR);            
+            strTemp.append(ETX);  
+            strData.append(strTemp.toString());
+            strData.append(utilities.getCheckSum(strTemp.toString()));
+            strData.append(CR);
+            strData.append(LF); 
+            PatientTest.add(strData.toString());  
+       
+   }
     
-      private static void AddtoQueue(sampledata get,String[] query,boolean empty) 
-      {
-          StringBuffer strData = new StringBuffer();
-          strData.append("H|\\^&|||BLIS^^^^^INTF. CLIENT||||||||E1394-97");
-          strData.append(CARRIAGE_RETURN);
-          //strData.append(query[1]);
-          if(!empty)
-          {            
-            strData.append("P|1|||");          
-            strData.append(get.surr_id);
-            strData.append("|^");
-            strData.append(get.name.trim().replaceFirst(" ", "^"));
-            strData.append("||");
-            strData.append(utilities.getHL7DateOnly(get.dob,get.partial_dob));
-            strData.append("|");
-            strData.append(get.sex);
-            strData.append("|||||^");
-            strData.append(get.doctor);
-            strData.append("||||||||||||");          
-            strData.append("^^^OPD");
-            strData.append(CARRIAGE_RETURN);
-            strData.append("O|1|");
-            strData.append(get.aux_id);
-            strData.append("|");
-            strData.append(query[1].split("\\|")[2].split("\\^")[0]);
-            strData.append("^");
-            strData.append(query[1].split("\\|")[2].split("\\^")[1]);
-           // strData.append("^^");
-            strData.append("|");
-            strData.append("^^^^WBC\\^^^^RBC\\^^^^HGB\\^^^^HCT\\^^^^MCV\\^^^^MCH\\^^^^MCHC\\^^^^PLT\\^^^^NEUT%\\^^^^LYMPH%\\^^^^MONO%\\^^^^EO%\\^^^^BASO%\\^^^^NEUT#\\^^^^LYMPH#\\^^^^MONO#\\^^^^EO#\\^^^^BASO#\\^^^^RDW-SD\\^^^^RDW-CV\\^^^^PDW\\^^^^MPV\\^^^^P-LCR\\^^^^PCT");
-            strData.append("||");
-            strData.append(utilities.getHL7Date(get.date_recvd,get.date_collected,"YYYYMMDDHHMMSS"));
-            strData.append("|");
-            strData.append(utilities.getHL7Date(get.date_collected,get.date_recvd,"YYYYMMDDHHMMSS"));
-            strData.append("||||||||");
-            strData.append(get.doctor);
-            strData.append(CARRIAGE_RETURN);
-          }
-          else
-          {
-              strData.append("P|1");
-              strData.append(CARRIAGE_RETURN);
-              strData.append("O|1");
-              strData.append(CARRIAGE_RETURN);
-          }
-          //strData.append("|");
-         // strData.append("6^2^15^1");
-          
-          strData.append("L|1|N");
-          strData.append(CARRIAGE_RETURN);
-             
+      private static void AddtoQueue(String data) 
+      {        
+            
               synchronized(OutQueue)
                {
-                   OutQueue.add(strData.toString());
-                   log.logger.Logger("New message added to sending queue\n"+strData.toString());                                                          
+                   OutQueue.add(data);
+                   log.logger.Logger("New message added to sending queue\n"+data);                                                          
                }
       }
-    public static void handleMessage(String message)
-    {  
-        try
-        {
-            MSGTYPE type =getMessageType(message);
-            String[] msgParts = message.split("\r");
-            if(type == MSGTYPE.QUERY)
-            {
-                //todo handle query for samples
-                 String[] sidparts = msgParts[1].split("\\|");
-                 String SampleID = sidparts[2].split("\\^")[0];
-                  //SampleID = utilities.getSystemDate("YYYY") + SampleID;
-                 if(!SampleID.isEmpty())
-                 {
-                    getBLISTests(SampleID,false,msgParts);
-                 }
-                 else
-                 {
-                     AddtoQueue(null, null, true);
-                 }
-            }
-            else if (type == MSGTYPE.RESULTS)
-            {
-                //todo handle results
-                String pidParts[] = msgParts[1].split("\\|");
-                if(pidParts.length > 5)
-                {
-                    String patientid = pidParts[4];
-                    String SampleID = msgParts[3].split("\\|")[3].split("\\^")[2].trim();
-                    //SampleID = utilities.getSystemDate("YYYY") + SampleID;
-                    SampleID =  patientid;
-                    int mID=0;
-                    float value = 0;
-                    boolean flag = false;
-                    for(int i=5;i<=29;i++)
+      
+      private static void process()
+      {        
+          int[] resultslocs = {3,3};
+           try
+           {
+           if(!ASTMMsgs.isEmpty())
+               {
+                   //String.valueOf(STX)+"[\\d]
+                   ASTMMsgs = ASTMMsgs.replaceAll(String.valueOf(STX)+"[\\d]", "");
+                   ASTMMsgs = ASTMMsgs.replaceAll(String.valueOf(ETB)+String.valueOf(CR), "");
+                   
+                   String[] PatientParts = ASTMMsgs.trim().split("L\\|1\\|N"+String.valueOf(CR));
+                    for(int p=0;p<PatientParts.length;p++)
                     {
-                            mID = getMeasureID(msgParts[i].split("\\|")[1]);
-                            if(mID > 0)
+                        String[] msgParts = PatientParts[p].trim().split("\r");
+                         int id=0;
+                         if(msgParts.length == 3)
+                             id =1;
+                         else
+                             id =2;
+                        String pidParts[] = msgParts[id].split("\\|");
+                        if(pidParts.length > 4)
+                        {
+                            if("Q".equals(pidParts[0].trim()))
                             {
-                                try
+                                 String patientid = pidParts[2].split("\\^")[0].trim();                                 
+                                 String SampleID = pidParts[2].split("\\^")[1].trim();
+                                 getBLISTests(SampleID,true);
+                                  
+                            }
+                            else if("C".equals(pidParts[0].trim()))
+                            {
+                                log.AddToDisplay.Display("last request has been cancelled by FLEXOR JUNIOR",DisplayMessageType.INFORMATION);
+                                 appMode = MODE.IDLE;
+                                synchronized(MainForm.set)
                                 {
-                                    value = Float.parseFloat(msgParts[i].split("\\|")[3]);
-                                }catch(NumberFormatException e){
-                                    try{
-                                    value = 0;
-                                    }catch(NumberFormatException ex){}
-
-                                }
-                                if(SaveResults(SampleID, mID,value))
-                                {
-                                    flag = true;
+                                    MainForm.set = MainForm.RESET.NOW;
                                 }
                             }
-                    }
-                     if(flag)
-                        {
-                             log.AddToDisplay.Display("\nResults with Code: "+SampleID +" sent to BLIS sucessfully",DisplayMessageType.INFORMATION);
+                            else
+                            {
+                                pidParts = msgParts[2].split("\\|");
+                                String patientid = pidParts[2].split("\\^")[0].trim();
+                                String SampleID = pidParts[2].split("\\^")[0].trim(); 
+                                //SampleID = utilities.getSystemDate("YYYY") + SampleID;
+                                //SampleID =  patientid;
+                                int mID=0;
+                                String value = "";
+                                boolean flag = false;
+                                if(msgParts.length > resultslocs[resultslocs.length -1] )
+                                {
+                                    for(int i=0;i<resultslocs.length;i++)
+                                    {
+                                        if(msgParts[resultslocs[i]].split("\\|")[0].endsWith("R"))
+                                        {
+                                            mID = getMeasureID(msgParts[resultslocs[i]].split("\\|")[2].split("\\^")[3].trim());
+                                            if(mID > 0)
+                                            {
+                                                try
+                                                {
+                                                value = msgParts[resultslocs[i]].split("\\|")[3].split("\\^")[0].trim();
+                                                if(value.equalsIgnoreCase("REJECT") || value.equalsIgnoreCase("BUSY"))
+                                                {
+                                                      log.AddToDisplay.Display("Sample with code "+SampleID +" has status "+ value +" on FLEXOR JUNIOR",DisplayMessageType.INFORMATION);
+                                                      
+                                                      continue;
+                                                }
+                                                }catch(ArrayIndexOutOfBoundsException ex){ value = "";}
+                                                if(SaveResults(SampleID, mID,value))
+                                                {
+                                                    flag = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                     if(flag)
+                                        {
+                                             log.AddToDisplay.Display("\nResults with Code: "+SampleID +" sent to BLIS sucessfully",DisplayMessageType.INFORMATION);
+                                        }
+                                        else
+                                        {
+                                             log.AddToDisplay.Display("\nTest with Code: "+SampleID +" not Found on BLIS",DisplayMessageType.WARNING);
+                                        }
+                                 }
+                                else
+                                {
+                                    log.AddToDisplay.Display("Sample with code "+SampleID +" has been deleted from FLEXOR JUNIOR",DisplayMessageType.INFORMATION);
+                                }
+                                 
+                                appMode = MODE.IDLE;
+                                synchronized(MainForm.set)
+                                {
+                                    MainForm.set = MainForm.RESET.NOW;
+                                }
+                            }
+
+
                         }
                         else
                         {
-                             log.AddToDisplay.Display("\nTest with Code: "+SampleID +" not Found on BLIS",DisplayMessageType.WARNING);
-                        }
-
-
-                }
-                else
-                {
-                    log.AddToDisplay.Display("QC or BACKGROUND CHECK information Skipped",DisplayMessageType.INFORMATION);
-                }
-
+                            log.AddToDisplay.Display("Message format not known: Skipped",DisplayMessageType.INFORMATION);
+                        }                        
+                    }
+               }
+           }catch(Exception ex){ log.AddToDisplay.Display(ex.getMessage(),DisplayMessageType.ERROR); }
+           ASTMMsgs="";
+          
+      }
+    public static void handleMessage(String message)
+    {         
+         synchronized(MainForm.set)
+          {
+             MainForm.set = MainForm.RESET.WAIT;
+          }
+        try
+        {
+            //String[] msgParts = message.split("\r");
+            MSGTYPE type =getMessageType(message);           
+            if(type == MSGTYPE.ENQ)
+            {                
+                AddtoQueue(ACK);
+               //ASTMMsgs="";
+               appMode = MODE.RECEIVEING_RESULTS;
             }
+            else if(type == MSGTYPE.STX)
+            {
+                AddtoQueue(ACK);
+               ASTMMsgs = ASTMMsgs + "\r"+message;
+               appMode = MODE.RECEIVEING_RESULTS;
+               if(ASTMMsgs.endsWith(String.valueOf(EOT)))
+               {
+                   process();
+               }
+                
+            }
+            else if (type == MSGTYPE.EOT)
+            {                
+                //todo handle results 
+               process();
+                
+            }
+            else if (type == MSGTYPE.NAK)
+            {
+                 log.AddToDisplay.Display("NAK Response from Analyzer",DisplayMessageType.ERROR);
+            }
+            else if(type == MSGTYPE.ACK)
+            {
+                if(appMode == MODE.SENDING_QUERY)
+                {
+                    if(PatientTest.size()>0)
+                    {
+                        AddtoQueue(PatientTest.poll());
+                        /*while(PatientTest.size() > 0)
+                        {
+                            AddtoQueue(PatientTest.poll());
+                        }*/
+                        //AddtoQueue(EOT);
+                    }
+                    else
+                    {
+                        AddtoQueue(EOT);
+                        Thread.sleep(500);
+                        appMode = MODE.IDLE;
+                        synchronized(MainForm.set)
+                        {
+                            MainForm.set = MainForm.RESET.NOW;
+                        }
+                    }
+                }
+                
+               
+               
+            }          
+            
         }catch(Exception ex)
         {
             log.AddToDisplay.Display("Processing Error Occured!",DisplayMessageType.ERROR);
             log.AddToDisplay.Display("Data format of Details received from Analyzer UNKNOWN",DisplayMessageType.ERROR);
+            log.logger.PrintStackTrace(ex);
         }
        
     }
@@ -307,23 +546,45 @@ public class FlexorJunior extends Thread{
     private static MSGTYPE getMessageType(String msg)
     {
         MSGTYPE type = null;
-        String[] parts = msg.split("\r");
-        if(parts.length > 1 )
+        switch (msg.charAt(0))
         {
-            if(parts[1].startsWith("Q|"))
-            {
-                type= MSGTYPE.QUERY;
-            }
-            else if (parts[1].startsWith("P|"))
-            {
-                type = MSGTYPE.RESULTS;
-            }
-            else
-            {
-                type =MSGTYPE.UNKNOWN;
-            }
+            case ACK:
+                type = MSGTYPE.ACK;                
+                break;
+            case ENQ:
+                type = MSGTYPE.ENQ;
+                break;
+            case EOT:
+                type =MSGTYPE.EOT;
+                break;
+            case NAK:
+                type = MSGTYPE.NAK;
+                break;
+            case STX:
+                type = MSGTYPE.STX;
+                break;
+            case ETX:
+                type = MSGTYPE.ETX;
+                break;
+            default:
+                String[] parts = msg.split("\r");
+                if(parts.length > 1 )
+                {
+                    if(parts[1].startsWith("Q|"))
+                    {
+                        type= MSGTYPE.QUERY;
+                    }
+                    else if (parts[1].startsWith("P|"))
+                    {
+                        type = MSGTYPE.RESULTS;
+                    }
+                    else
+                    {
+                        type =MSGTYPE.UNKNOWN;
+                    }
+                }
         }
-        
+            
         return type;
         
     }
@@ -331,7 +592,7 @@ public class FlexorJunior extends Thread{
      private void setTestIDs()
      {
          String equipmentid = getSpecimenFilter(3);
-         String blismeasureid = getSpecimenFilter(4);
+         String blismeasureid = getSpecimenFilter(4); 
         
          String[] equipmentids = equipmentid.split(",");
          String[] blismeasureids = blismeasureid.split(",");
@@ -348,8 +609,9 @@ public class FlexorJunior extends Thread{
         xmlparser p = new xmlparser("configs/flexorjunior/flexorjunior.xml");
         try {
             data = p.getMicros60Filter(whichdata);           
-        } catch (Exception ex) {
-            Logger.getLogger(FlexorJunior.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {           
+            log.logger.PrintStackTrace(ex);
+            log.AddToDisplay.Display(ex.getMessage(), log.DisplayMessageType.ERROR);
         }        
         return data;        
     }
@@ -368,13 +630,27 @@ public class FlexorJunior extends Thread{
          
          return measureid;
      }
+     private static String getEquipmentID(String measureID)
+     {
+         String equipmentID = "";
+         for(int i=0;i<testIDs.size();i++)
+         {
+             if(testIDs.get(i).split(";")[1].equalsIgnoreCase(measureID))
+             {
+                 equipmentID = testIDs.get(i).split(";")[0];
+                 break;
+             }
+         }
+         
+         return equipmentID;
+     }
      
-    private static boolean SaveResults(String barcode,int MeasureID, float value)
+    private static boolean SaveResults(String barcode,int MeasureID, String value)
      {
          
          
           boolean flag = false;       
-          if("1".equals(BLIS.blis.saveResults(barcode,MeasureID,value,0)))
+          if("1".equals(BLIS.blis.saveResults(barcode,MeasureID,value)))
            {
               flag = true;
             }

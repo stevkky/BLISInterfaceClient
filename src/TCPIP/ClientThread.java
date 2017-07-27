@@ -1,24 +1,19 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package TCPIP;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import log.*;
+import ui.MainForm;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
- * 
- * This is the main client thread that handles all communication to equipment using the TCP/IP protocol
+ * @author BLIS
  */
 class ClientThread extends Thread
 {   
@@ -39,9 +34,9 @@ class ClientThread extends Thread
     {
          this.connSock= conn;    
          this.Equipmentname = Equipment;
-         System.out.println("Client instance created");
-         log.AddToDisplay.Display("Client instance created", log.DisplayMessageType.INFORMATION);
-         logger.Logger("Client instance created");
+         //System.out.println("Client instance created");
+         //log.AddToDisplay.Display("Client instance created", log.DisplayMessageType.INFORMATION);
+         //logger.Logger("Client instance created");
          
     }
     @Override
@@ -61,7 +56,8 @@ class ClientThread extends Thread
                   inFromEquipment=new BufferedReader(new InputStreamReader (connSock.getInputStream()));
                  
                     read = "";
-                    if(this.Equipmentname.equalsIgnoreCase("Mindray BS-200E"))
+                    if(this.Equipmentname.equalsIgnoreCase("Mindray BS-200E") || this.Equipmentname.equalsIgnoreCase("Mindray BS-300") || this.Equipmentname.equalsIgnoreCase("Mindray BC-3600")
+                            || this.Equipmentname.equalsIgnoreCase("Mindray BC-5380") || this.Equipmentname.equalsIgnoreCase("Mindray BS-240"))
                     {
                         while((input = inFromEquipment.readLine()).length()> 1)
                         {
@@ -70,7 +66,8 @@ class ClientThread extends Thread
                              //count++;
                         }
                     }
-                    else if (this.Equipmentname.equalsIgnoreCase("SYSMEX XS-500I") || this.Equipmentname.equalsIgnoreCase("COBASAMPLIPREP") )
+                    else if (this.Equipmentname.equalsIgnoreCase("SYSMEX XS-500I") || this.Equipmentname.equalsIgnoreCase("COBASAMPLIPREP")
+                            || this.Equipmentname.equalsIgnoreCase("SYSMEX XN-1000"))
                     {
                         int c=0;
                         int val;
@@ -92,7 +89,8 @@ class ClientThread extends Thread
                               break;*/
                         }
                     }
-                    else if(this.Equipmentname.equalsIgnoreCase("BT3000PlUSChameleon") || this.Equipmentname.equalsIgnoreCase("SYSMEX XT-2000i"))
+                    else if(this.Equipmentname.equalsIgnoreCase("BT3000PlUSChameleon") || this.Equipmentname.equalsIgnoreCase("SYSMEX XT-2000i")
+                            || this.Equipmentname.equalsIgnoreCase("FLEXOR JUNIOR") || this.Equipmentname.equalsIgnoreCase("BT3000PlusChameleon v1.0.7"))
                     {
                         int c=0;
                         int val;
@@ -114,7 +112,7 @@ class ClientThread extends Thread
                           {
                              line = line + "\r";
                              read = read + line;
-                             if(line.startsWith("L|1|N"))
+                             if(line.startsWith("L|1|N") || line.endsWith("L|1|N"))
                                  break;                            
                              line ="";                             
                              c++;
@@ -123,13 +121,14 @@ class ClientThread extends Thread
                               break;*/
                         }
                     }
-                    else if(this.Equipmentname.equalsIgnoreCase("GENEXPERT"))
+                    else if(this.Equipmentname.equalsIgnoreCase("GENEXPERT") || (this.Equipmentname.equalsIgnoreCase("SelectraProS")) || (this.Equipmentname.equalsIgnoreCase("URIT 5250")))
                     {
                         int c=0;
                         int val;
                         String line ="";
                         while((val = inFromEquipment.read()) > -1)
-                        { if(val != 13)
+                        { 
+                          if(val != 13)
                           {
                             line = line + (char)val;  
                              if((char)val == ACK || (char)val == ENQ || (char)val == NAK || (char)val == EOT || (char)val == ETX|| (char)val == ETB)
@@ -137,7 +136,7 @@ class ClientThread extends Thread
                                  read = read + line;
                                  break;
                              }
-                                 
+                            
                           }
                           else
                           {
@@ -147,29 +146,7 @@ class ClientThread extends Thread
                              c++;
                           }                            
                         }
-                    }
-                    else if (this.Equipmentname.equalsIgnoreCase("FLEXOR JUNIOR"))
-                    {
-                        int c=0;
-                        int val;
-                        String line ="";
-                        while((val = inFromEquipment.read()) > -1)
-                        {                     
-                          if(val != 13)
-                            line = line + (char)val;   
-                          else
-                          {
-                             line = line + "\r";
-                             read = read + line;
-                             if(line.startsWith("L|1|N"))
-                                 break;
-                             line ="";                             
-                             c++;
-                          }
-                          /*if(c>=29)
-                              break;*/
-                        }
-                    }
+                    }                   
                     else
                     {
                         while((input = inFromEquipment.readLine())!= null)
@@ -181,8 +158,35 @@ class ClientThread extends Thread
                     }
                
                  
-                }catch(NullPointerException ex){
+                }catch(Exception ex)
+                {                   
+                     logger.Logger(ex.getMessage());
+                     logger.PrintStackTrace(ex);
                      log.AddToDisplay.Display(ex.getMessage(), log.DisplayMessageType.ERROR);
+                     
+                     if(connSock.isClosed())
+                     {                         
+                         log.AddToDisplay.Display("SOcket Closed", log.DisplayMessageType.ERROR);
+                        // log.AddToDisplay.Display("Trying to reset the connection", log.DisplayMessageType.INFORMATION);
+                      
+                     }  
+                     else
+                     {
+                         log.AddToDisplay.Display("The socket has been closed at the other end", log.DisplayMessageType.ERROR);
+                         try
+                         {
+                            connSock.close();
+                         }
+                         catch(IOException exx)
+                         {
+                            logger.Logger(ex.getMessage());
+                            logger.PrintStackTrace(ex);
+                         }
+                        
+                         
+                     }
+                     
+                     break;
                 }                  
                  
                   if(!read.isEmpty())
@@ -196,8 +200,13 @@ class ClientThread extends Thread
                         case "Mindray BS-200E":
                             MindrayBS200E.handleMessage(read);
                             break;
+                        case "Mindray BS-300":
+                            MindrayBS300.handleMessage(read);
+                            break;
                         case "BT3000PlUSChameleon":
                             BT3000PlusChameleon.handleMessage(read);
+                        case "BT3000PlusChameleon v1.0.7":
+                            BT3000PlusChameleon1_0_7.handleMessage(read);
                             break;
                         case "SYSMEX XS-500i":
                             SYSMEXXS500i.handleMessage(read);
@@ -214,13 +223,33 @@ class ClientThread extends Thread
                         case "SYSMEX XT-2000i":
                             SYSMEXXT2000i.handleMessage(read);
                             break;
+                        case "SYSMEX XN-1000":
+                            SYSMEXXN1000.handleMessage(read);
+                            break;
+                        case "SelectraProS":
+                            SelectraProS.handleMessage(read);
+                            break;                                
+                        case "Mindray BC-3600":
+                            TCPIP.MindrayBC3600.handleMessage(read);
+                            break;
+                        case "Mindray BC-5380":
+                           TCPIP.MindrayBC5380.handleMessage(read);
+                            break;
+                        case "URIT 5250":
+                            TCPIP.URIT5250.handleMessage(read);
+                            break;
+                        case "Mindray BS-240":
+                            TCPIP.MindrayBS240.handleMessage(read);
+                            break;
+                                
                     }   
                   }
                             
             }
            
-       }catch(IOException e){
+       }catch(Exception e){
            logger.Logger(e.getMessage());
+           logger.PrintStackTrace(e);
            log.AddToDisplay.Display(e.getMessage(), log.DisplayMessageType.ERROR);
        }
     }

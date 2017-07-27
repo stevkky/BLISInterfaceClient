@@ -1,13 +1,9 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package TCPIP;
 
 import BLIS.sampledata;
@@ -27,7 +23,7 @@ import system.SampleDataJSON;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
+ * @author BLIS
  */
 public class MindrayBS200E extends Thread{
         
@@ -40,12 +36,8 @@ public class MindrayBS200E extends Thread{
     static Queue<String> OutQueue=new LinkedList<>();
     
     boolean stopped = false;
-    static String EquipmentName;
     //Queue<String> InQueue=new LinkedList<>();
     
-    public MindrayBS200E(String EquipmentName){
-        MindrayBS200E.EquipmentName = EquipmentName;
-    }
    
     public void Stop()
     {
@@ -57,7 +49,7 @@ public class MindrayBS200E extends Thread{
             
             welcomeSocket.close();
 //            connSock.close();
-             log.AddToDisplay.Display(MindrayBS200E.EquipmentName +" handler stopped", DisplayMessageType.TITLE);
+             log.AddToDisplay.Display("Mindray BS-200E handler stopped", DisplayMessageType.TITLE);
         } catch (IOException ex) {
             Logger.getLogger(MindrayBS200E.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -65,16 +57,26 @@ public class MindrayBS200E extends Thread{
     }
       @Override
     public void run() {
-        log.AddToDisplay.Display(MindrayBS200E.EquipmentName +" handler started...", DisplayMessageType.TITLE);
+        log.AddToDisplay.Display("Mindray BS-200E handler started...", DisplayMessageType.TITLE);
         log.AddToDisplay.Display("Starting Server scoket on port "+tcpsettings.PORT, DisplayMessageType.INFORMATION);
          
         try
         {
+             if(tcpsettings.SERVER_MODE)
+            {   
+                 log.AddToDisplay.Display("Starting Server scoket on port "+tcpsettings.PORT, DisplayMessageType.INFORMATION);
                 welcomeSocket = new ServerSocket(tcpsettings.PORT);
   		log.AddToDisplay.Display("Waiting for Equipment connection...", DisplayMessageType.INFORMATION);
   		log.AddToDisplay.Display("Listening on port "+ tcpsettings.PORT+"...",DisplayMessageType.INFORMATION);
-                connSock = welcomeSocket.accept();                
-                log.AddToDisplay.Display(MindrayBS200E.EquipmentName +" is now Connected...",DisplayMessageType.INFORMATION);
+                connSock = welcomeSocket.accept();  
+            }
+            else
+            {
+                log.AddToDisplay.Display("Starting Client socket on IP "+tcpsettings.EQUIPMENT_IP +" on port  "+tcpsettings.PORT, DisplayMessageType.INFORMATION);
+               connSock = new Socket(tcpsettings.EQUIPMENT_IP, tcpsettings.PORT);
+            }             
+                         
+                log.AddToDisplay.Display("Mindray BS-200E is now Connected...",DisplayMessageType.INFORMATION);
                 first=false;
                 ClientThread client = new ClientThread(connSock,"Mindray BS-200E");
                 client.start();

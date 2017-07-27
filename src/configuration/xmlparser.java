@@ -1,13 +1,9 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package configuration;
 
 import hl7.Mindray.Field;
@@ -24,7 +20,7 @@ import hl7.blocks;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
+ * @author BLIS
  */
 
 public class xmlparser 
@@ -526,7 +522,7 @@ class MindrayConfigHandler extends DefaultHandler {
                 data =  content;
           }
          break;
-       case "equipmentid":
+       case "equipmenttestid":
           if(whichdata == 3)
           {
             if(!data.isEmpty())

@@ -1,13 +1,9 @@
-/* 
- *  C4G BLIS Equipment Interface Client
- * 
- *  Project funded by PEPFAR
- * 
- *  Philip Boakye      - Team Lead  
- *  Patricia Enninful  - Technical Officer
- *  Stephen Adjei-Kyei - Software Developer
- * 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
 package RS232;
 
 
@@ -31,7 +27,7 @@ import system.settings;
 
 /**
  *
- * @author Stephen Adjei-Kyei <stephen.adjei.kyei@gmail.com>
+ * @author BLIS
  */
 public class BT3000Plus extends Thread {
     
@@ -90,30 +86,12 @@ public class BT3000Plus extends Thread {
        {
            log.AddToDisplay.Display("Connected sucessfully",DisplayMessageType.INFORMATION);   
            setTestIDs();
-         if(settings.ENABLE_AUTO_POOL)
-         {
-            while(!stopped)
-            {
-                try {
-                    getBLISTests("",false);
-                    manageResults();
-                    Thread.sleep(settings.POOL_INTERVAL * 1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(BT3000Plus.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            log.AddToDisplay.Display("BT3000 Plus Handler Stopped",log.DisplayMessageType.TITLE);
-          }
-         else
-         {
-             log.AddToDisplay.Display("Auto Pull Disabled. Only manual activity can be performed",log.DisplayMessageType.INFORMATION);
-         }
        }
       
     }
     
     
-    private void getBLISTests(String aux_id, boolean flag)
+    public void getBLISTests(String aux_id, boolean flag)
      {
          try
          {
@@ -138,7 +116,7 @@ public class BT3000Plus extends Thread {
                  else
                  {
                      if(flag)                         
-                         log.AddToDisplay.Display("Sample with code: "+aux_id +" already exist in Analyzer",DisplayMessageType.INFORMATION);
+                         log.AddToDisplay.Display("Sample with code: "+aux_id +" already exist in Analyzer",DisplayMessageType.ERROR);
                  }
              }
              
@@ -146,7 +124,7 @@ public class BT3000Plus extends Thread {
           else
            {
               if(flag)                         
-                log.AddToDisplay.Display("Sample with code: "+aux_id +" does not exist in BLIS",DisplayMessageType.INFORMATION);
+                log.AddToDisplay.Display("Sample with code: "+aux_id +" does not exist in BLIS",DisplayMessageType.ERROR);
           }
          }catch(Exception ex)
          {
