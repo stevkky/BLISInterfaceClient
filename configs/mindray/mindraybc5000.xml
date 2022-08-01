@@ -26,89 +26,109 @@
 			<listestname>BAS#</listestname>
 		</listest>	
 		<listest>
-			<equipmenttestid>21</equipmenttestid>
+			<equipmenttestid>7</equipmenttestid>
 			<listestid>48</listestid>
-			<listestname>HGB</listestname>
+			<listestname>BAS%</listestname>
 		</listest>	
 		<listest>
-			<equipmenttestid>26</equipmenttestid>
+			<equipmenttestid>8</equipmenttestid>
 			<listestid>49</listestid>
-			<listestname>HCT</listestname>
+			<listestname>NEU#</listestname>
 		</listest>	
 		<listest>
-			<equipmenttestid>23</equipmenttestid>
+			<equipmenttestid>9</equipmenttestid>
 			<listestid>50</listestid>
-			<listestname>MCV</listestname>
+			<listestname>NEU%</listestname>
 		</listest>	
 		<listest>
-			<equipmenttestid>24</equipmenttestid>
+			<equipmenttestid>10</equipmenttestid>
 			<listestid>51</listestid>
-			<listestname>MCH</listestname>
+			<listestname>EOS#</listestname>
 		</listest>	
 		<listest>
-			<equipmenttestid>22</equipmenttestid>
+			<equipmenttestid>11</equipmenttestid>
 			<listestid>52</listestid>
-			<listestname>MCHC</listestname>
+			<listestname>EOS%</listestname>
 		</listest>	
 		<listest>
-			<equipmenttestid>25</equipmenttestid>
+			<equipmenttestid>12</equipmenttestid>
 			<listestid>53</listestid>
-			<listestname>RDW-CV</listestname>
+			<listestname>LYM#</listestname>
 		</listest>
 		<listest>
-			<equipmenttestid>31</equipmenttestid>
+			<equipmenttestid>13</equipmenttestid>
 			<listestid>490</listestid>
-			<listestname>RDW-SD</listestname>
+			<listestname>LYM%</listestname>
 		</listest>		
 		<listest>
-			<equipmenttestid>27</equipmenttestid>
-			<listestid>54</listestid>
-			<listestname>PLT</listestname>
-		</listest>	
-		<listest>
-			<equipmenttestid>28</equipmenttestid>
-			<listestid>55</listestid>
-			<listestname>MPV</listestname>
-		</listest>
-		<listest>
-			<equipmenttestid>29</equipmenttestid>
-			<listestid>491</listestid>
-			<listestname>PDW</listestname>
-		</listest>
-		<listest>
-			<equipmenttestid>30</equipmenttestid>
-			<listestid>492</listestid>
-			<listestname>PCT</listestname>
-		</listest>
-		<listest>
 			<equipmenttestid>14</equipmenttestid>
-			<listestid>476</listestid>
-			<listestname>LYM#</listestname>
+			<listestid>54</listestid>
+			<listestname>MON#</listestname>
 		</listest>	
 		<listest>
 			<equipmenttestid>15</equipmenttestid>
-			<listestid>486</listestid>
-			<listestname>MID#</listestname>
+			<listestid>55</listestid>
+			<listestname>MON%</listestname>
 		</listest>
 		<listest>
 			<equipmenttestid>16</equipmenttestid>
-			<listestid>487</listestid>
-			<listestname>GRAN#</listestname>
-		</listest>	
+			<listestid>491</listestid>
+			<listestname>RBC</listestname>
+		</listest>
 		<listest>
 			<equipmenttestid>17</equipmenttestid>
-			<listestid>43</listestid>
-			<listestname>LYM%</listestname>
+			<listestid>492</listestid>
+			<listestname>HGB</listestname>
 		</listest>
 		<listest>
 			<equipmenttestid>18</equipmenttestid>
-			<listestid>488</listestid>
-			<listestname>MID%</listestname>
-		</listest>
+			<listestid>476</listestid>
+			<listestname>MCV</listestname>
+		</listest>	
 		<listest>
 			<equipmenttestid>19</equipmenttestid>
+			<listestid>486</listestid>
+			<listestname>MCH</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>20</equipmenttestid>
+			<listestid>487</listestid>
+			<listestname>MCHC</listestname>
+		</listest>	
+		<listest>
+			<equipmenttestid>21</equipmenttestid>
+			<listestid>43</listestid>
+			<listestname>RDW-CV</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>22</equipmenttestid>
+			<listestid>488</listestid>
+			<listestname>RDW-SD</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>23</equipmenttestid>
 			<listestid>489</listestid>
-			<listestname>GRAN%</listestname>
+			<listestname>HCT</listestname>
+		</listest>		
+		<listest>
+			<equipmenttestid>24</equipmenttestid>
+			<listestid>489</listestid>
+			<listestname>PLT</listestname>
+		</listest>		
+		<listest>
+			<equipmenttestid>25</equipmenttestid>
+			<listestid>489</listestid>
+			<listestname>MPV</listestname>
+		</listest>		
+		<listest>
+			<equipmenttestid>26</equipmenttestid>
+			<listestid>489</listestid>
+			<listestname>PDW</listestname>
+		</listest>		
+		<listest>
+			<equipmenttestid>27</equipmenttestid>
+			<listestid>489</listestid>
+			<listestname>PCT</listestname>
 		</listest>		
 	</supportedtests>
 </configuration>
