@@ -10,7 +10,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,6 +28,20 @@ public class utilities
         return sdfDate.format(now);       
     }
     
+    public static String formatAsDate(String format, String date)
+    {
+        try { 
+            
+            Date date1 = new SimpleDateFormat(format).parse(date);
+            
+            return  new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date1);
+            
+        } catch (Exception ex) {
+            Logger.getLogger(utilities.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      
+        return LocalDateTime.now().toString();
+    }
     public static String getHL7Date(String Date,String PDate, String Format)
     {
        try

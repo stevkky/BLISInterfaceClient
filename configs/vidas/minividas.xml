@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by Stephen Adjei-Kyei -->
+<configuration>
+	<supportedtestTypes>
+		<testtype>		
+			<testtypeid>*</testtypeid>
+			<testtypename>*</testtypename>
+		</testtype>			
+	</supportedtestTypes>
+	<supportedsamples>		
+		<sample>
+			<equipmentsampleid>1</equipmentsampleid>
+			<lissampleid>22</lissampleid>
+			<samplename>Whole Blood</samplename>
+		</sample>		
+	</supportedsamples>
+	<supportedtests>
+		<listest>
+			<equipmenttestid>tHCV</equipmenttestid>
+			<listestid>498</listestid>
+			<listestname>tHCV</listestname>
+		</listest>	
+		<listest>
+			<equipmenttestid>tTXG</equipmenttestid>
+			<listestid>449</listestid>
+			<listestname>tTXG</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>10</equipmenttestid>
+			<listestid>428</listestid>
+			<listestname>value</listestname>
+		</listest>	
+	</supportedtests>
+</configuration>

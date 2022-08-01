@@ -181,21 +181,7 @@ public class GeneXpert extends Thread{
         
      }
     
-    private static void resetCon()
-    {
-        /* if(!tcpsettings.SERVER_MODE)
-               {
-                 stopped = true;
-                 if(null != connSock)
-                 try {
-                     connSock.close();
-                 } catch (IOException ex) {
-                     Logger.getLogger(BT3000PlusChameleon.class.getName()).log(Level.SEVERE, null, ex);
-                 }
-                   MainForm.btobj = new BT3000PlusChameleon();
-                   MainForm.btobj.start();
-               }*/
-    }
+    
    private static void getBLISTests(String aux_id, boolean flag)
      {
          try
@@ -236,18 +222,7 @@ public class GeneXpert extends Thread{
          }
      }
    
-   private static boolean sendNow(String message)
-   {
-       boolean status = false;
-        try {
-            outToEquipment.writeBytes(message);
-        } catch (IOException ex) {
-            Logger.getLogger(GeneXpert.class.getName()).log(Level.SEVERE, null, ex);
-        }
-       log.AddToDisplay.Display("[ "+message+ " ] sent successfully",DisplayMessageType.INFORMATION);
-       
-       return status;
-   }
+  
    private static void AddtoQueue(char value) 
    {
        synchronized(OutQueue)

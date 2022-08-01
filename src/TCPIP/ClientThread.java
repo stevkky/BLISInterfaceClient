@@ -57,7 +57,7 @@ class ClientThread extends Thread
                  
                     read = "";
                     if(this.Equipmentname.equalsIgnoreCase("Mindray BS-200E") || this.Equipmentname.equalsIgnoreCase("Mindray BS-300") || this.Equipmentname.equalsIgnoreCase("Mindray BC-3600")
-                            || this.Equipmentname.equalsIgnoreCase("Mindray BC-5380") || this.Equipmentname.equalsIgnoreCase("Mindray BS-240"))
+                            || this.Equipmentname.equalsIgnoreCase("Mindray BC-5380") || this.Equipmentname.equalsIgnoreCase("Mindray BS-240") || this.Equipmentname.equalsIgnoreCase("Mindray BC-5000"))
                     {
                         while((input = inFromEquipment.readLine()).length()> 1)
                         {
@@ -66,7 +66,7 @@ class ClientThread extends Thread
                              //count++;
                         }
                     }
-                    else if (this.Equipmentname.equalsIgnoreCase("SYSMEX XS-500I") || this.Equipmentname.equalsIgnoreCase("COBASAMPLIPREP")
+                    else if (this.Equipmentname.equalsIgnoreCase("SYSMEX XS-500I") || this.Equipmentname.equalsIgnoreCase("COBAS AMPLIPREP")
                             || this.Equipmentname.equalsIgnoreCase("SYSMEX XN-1000"))
                     {
                         int c=0;
@@ -126,6 +126,7 @@ class ClientThread extends Thread
                         int c=0;
                         int val;
                         String line ="";
+                        
                         while((val = inFromEquipment.read()) > -1)
                         { 
                           if(val != 13)
@@ -194,6 +195,7 @@ class ClientThread extends Thread
                     log.AddToDisplay.Display("New message recieved", log.DisplayMessageType.TITLE);     
                     log.AddToDisplay.Display(read, log.DisplayMessageType.INFORMATION);         
                     system.utilities.writetoFile(read.replaceAll("<::>", "\r"));
+                    read = read.replaceAll("<::>", "\r");
                   
                     switch(this.Equipmentname)
                     {
@@ -214,7 +216,7 @@ class ClientThread extends Thread
                         case "FLEXOR JUNIOR":
                             FlexorJunior.handleMessage(read);
                             break;
-                        case "CobasAmpliPrep":
+                        case "Cobas AmpliPrep":
                             CobasAmpliPrep.handleMessage(read);
                             break;
                         case "GENEXPERT":
@@ -240,6 +242,9 @@ class ClientThread extends Thread
                             break;
                         case "Mindray BS-240":
                             TCPIP.MindrayBS240.handleMessage(read);
+                            break;
+                        case "Mindray BC-5000":
+                            TCPIP.MindrayBC5000.handleMessage(read);
                             break;
                                 
                     }   

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<supportedtestTypes>
+		<testtype>		
+			<testtypeid>*</testtypeid>
+			<testtypename>*</testtypename>
+		</testtype>			
+	</supportedtestTypes>
+	<supportedsamples>	
+		<sample>
+			<equipmentsampleid>1</equipmentsampleid>
+			<lissampleid>2</lissampleid>
+			<samplename>Whole Blood</samplename>
+		</sample>		
+	</supportedsamples>
+	<supportedtests>		
+		<listest>
+			<equipmenttestid>GLU1</equipmenttestid>
+			<listestid>95</listestid>
+			<listestname>FBS (Glucose)</listestname>
+		</listest> 
+		<listest>
+			<equipmenttestid>PRO</equipmenttestid>
+			<listestid>156</listestid>
+			<listestname>Total Protein</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>ALB</equipmenttestid>
+			<listestid>144</listestid>
+			<listestname>Albumin</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>GLB</equipmenttestid>
+			<listestid>154</listestid>
+			<listestname>Globulins</listestname>
+		</listest>
+		<!--<listest> change LISTESTID
+			<equipmenttestid>TBIL</equipmenttestid>
+			<listestid>532</listestid>
+			<listestname>Total Bilirubin</listestname>
+		</listest> -->
+		<listest>
+			<equipmenttestid>TBL1</equipmenttestid>
+			<listestid>146</listestid>
+			<listestname>Total Bilirubin</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>DBIL</equipmenttestid>
+			<listestid>148</listestid>
+			<listestname>Direct Bilirubin</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>IBIL</equipmenttestid>
+			<listestid>150</listestid>
+			<listestname>Indirect Bilirubin</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>AST</equipmenttestid>
+			<listestid>157</listestid>
+			<listestname>AST</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>ALT</equipmenttestid>
+			<listestid>153</listestid>
+			<listestname>ALT</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>AMYL</equipmenttestid>
+			<listestid>383</listestid>
+			<listestname>AMYLASE</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>GGT</equipmenttestid>
+			<listestid>159</listestid>
+			<listestname>GGT</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>ALP1</equipmenttestid>
+			<listestid>152</listestid>
+			<listestname>ALKALINE PHOS</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>UREA</equipmenttestid>
+			<listestid>164</listestid>
+			<listestname>Urea</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>CRE1</equipmenttestid>
+			<listestid>167</listestid>
+			<listestname>Creatinine</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>CK</equipmenttestid>
+			<listestid>392</listestid>
+			<listestname>Creatinine Kinase</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>CA</equipmenttestid>
+			<listestid>97</listestid>
+			<listestname>CALCIUM</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>Na</equipmenttestid>
+			<listestid>160</listestid>
+			<listestname>Sodium</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>K</equipmenttestid>
+			<listestid>161</listestid>
+			<listestname>Potassium</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>URIC</equipmenttestid>
+			<listestid>102</listestid>
+			<listestname>Uric Acid</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>CHO1</equipmenttestid>
+			<listestid>135</listestid>
+			<listestname>Total Cholesterol</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>TRIG</equipmenttestid>
+			<listestid>141</listestid>
+			<listestname>Triglycerides</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>HDL</equipmenttestid>
+			<listestid>137</listestid>
+			<listestname>HDL Cholesterol</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>LDL1</equipmenttestid>
+			<listestid>138</listestid>
+			<listestname>LDL Cholesterol</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>VLDL</equipmenttestid>
+			<listestid>139</listestid>
+			<listestname>VLDL Cholesterol</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>CR</equipmenttestid>
+			<listestid>142</listestid>
+			<listestname>Coronary Risk</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>LDH</equipmenttestid>
+			<listestid>158</listestid>
+			<listestname>LDH</listestname>
+		</listest>				
+		<listest> 
+			<equipmenttestid>CKMB</equipmenttestid>
+			<listestid>123</listestid>
+			<listestname>CK-MB</listestname>
+		</listest>	
+		<listest>
+			<equipmenttestid>Cl</equipmenttestid>
+			<listestid>162</listestid>
+			<listestname>Chloride</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>CIR</equipmenttestid>
+			<listestid>391</listestid>
+			<listestname>CIR</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>CPK</equipmenttestid>
+			<listestid>476</listestid>
+			<listestname>CK-N</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>MAG</equipmenttestid>
+			<listestid>104</listestid>
+			<listestname>MAGNESIUM</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>PHOS</equipmenttestid>
+			<listestid>100</listestid>
+			<listestname>PHOSPHORUS </listestname>
+		</listest>
+	</supportedtests>
+	<calculatedTests>
+		<calcTest>
+			<testcode>LDL1</testcode>
+			<formula>CHO1-HDL-(TRIG*0.2)</formula>
+		</calcTest>
+		<calcTest>
+			<testcode>VLDL</testcode>
+			<formula>TRIG*0.2</formula>
+		</calcTest>
+		<calcTest>
+			<testcode>CR</testcode>
+			<formula>CHO1/HDL</formula>
+		</calcTest>
+		<calcTest>
+			<testcode>IBIL</testcode>
+			<formula>TBL1-DBIL</formula>
+		</calcTest>
+		<calcTest>
+			<testcode>GLB</testcode>
+			<formula>PRO-ALB</formula>
+		</calcTest>
+		<calcTest>
+			<testcode>CIR</testcode>
+			<formula>(CKMB/CPK)*100</formula>
+		</calcTest>
+		<Misc>
+			<m1>10</m1>
+		</Misc>
+	</calculatedTests>
+</configuration>

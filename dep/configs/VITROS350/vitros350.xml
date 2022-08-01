@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by Stephen Adjei-Kyei (GHSS) HO Configuration-->
+<configuration>
+	<supportedtestTypes>
+		<testtype>		
+			<testtypeid>*</testtypeid>
+			<testtypename>*</testtypename>
+		</testtype>			
+	</supportedtestTypes>
+	<supportedsamples>			
+		<sample>
+			<equipmentsampleid>1</equipmentsampleid>
+			<lissampleid>16</lissampleid>
+			<samplename>Serum</samplename>
+		</sample>					
+	</supportedsamples>
+	<supportedtests>					
+		<listest>
+			<equipmenttestid>ALB</equipmenttestid>
+			<listestid>43</listestid>
+			<listestname>ALBUMIN (SI)</listestname>
+		</listest>	
+		<listest>
+			<equipmenttestid>ALKP</equipmenttestid>
+			<listestid>273</listestid>
+			<listestname>Alk Phos</listestname>
+		</listest>				
+		<listest>
+			<equipmenttestid>ALT</equipmenttestid>
+			<listestid>36</listestid>
+			<listestname>ALT</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>AMYL</equipmenttestid>
+			<listestid>171</listestid>
+			<listestname>AMYLASE</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>AST</equipmenttestid>
+			<listestid>35</listestid>
+			<listestname>AST</listestname>
+		</listest>	
+		<listest>
+			<equipmenttestid>UREA</equipmenttestid>
+			<listestid>30</listestid>
+			<listestname>UREA</listestname>		
+		</listest>
+		<listest>
+			<equipmenttestid>Ca</equipmenttestid>
+			<listestid>170</listestid>
+			<listestname>CALCIUM (SI)</listestname>		
+		</listest>
+		<listest>
+			<equipmenttestid>CHOL</equipmenttestid>
+			<listestid>312</listestid>
+			<listestname>TOTAL CHOLESTEROL(SI)</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>CKMB</equipmenttestid>
+			<listestid>205</listestid>
+			<listestname>CK-MB</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>Cl-</equipmenttestid>
+			<listestid>34</listestid>
+			<listestname>CHLORIDE</listestname>
+		</listest>		
+		<listest>
+			<equipmenttestid>ECO2</equipmenttestid>
+			<listestid>280</listestid>
+			<listestname>CARBON DIOXIDE</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>CK</equipmenttestid>
+			<listestid>287</listestid>
+			<listestname>CREATININE KINASE</listestname>
+		</listest>		
+		<listest>
+			<equipmenttestid>CREA</equipmenttestid>
+			<listestid>31</listestid>
+			<listestname>CREATININE(SI)</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>Bc</equipmenttestid>
+			<listestid>39</listestid>
+			<listestname>DIRECT BILIRUBIN (SI)</listestname>
+		</listest>		
+		<listest>
+			<equipmenttestid>Bu</equipmenttestid>
+			<listestid>291</listestid>
+			<listestname>INDIRECT BILIRUBIN (SI)</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>dHDL</equipmenttestid>
+			<listestid>520</listestid>
+			<listestname>DHDL (SI)</listestname>
+		</listest>				
+		<listest>
+			<equipmenttestid>K+</equipmenttestid>
+			<listestid>33</listestid>
+			<listestname>POTASSIUM</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>LDH</equipmenttestid>
+			<listestid>203</listestid>
+			<listestname>LDH</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>CLDL</equipmenttestid>
+			<listestid>47</listestid>
+			<listestname>LDL-Direct</listestname>
+		</listest>		
+		<listest>
+			<equipmenttestid>Na+</equipmenttestid>
+			<listestid>32</listestid>
+			<listestname>SODIUM</listestname>
+		</listest>		
+		<listest>
+			<equipmenttestid>PHOS</equipmenttestid>
+			<listestid>772</listestid>
+			<listestname>Phosphorus(SI)</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>TP</equipmenttestid>
+			<listestid>42</listestid>
+			<listestname>TOTAL PROTEIN(SI)</listestname>
+		</listest>		
+		<listest>
+			<equipmenttestid>TBIL</equipmenttestid>
+			<listestid>532</listestid>
+			<listestname>TOTAL BILIRUBIN (SI)</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>TRIG</equipmenttestid>
+			<listestid>45</listestid>
+			<listestname>TRIGLYCERIDE (SI)</listestname>
+		</listest>		
+		<listest>
+			<equipmenttestid>URIC</equipmenttestid>
+			<listestid>52</listestid>
+			<listestname>URIC ACID(SI)</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>B12</equipmenttestid>
+			<listestid>773</listestid>
+			<listestname>Vitamin B12</listestname>
+		</listest>	
+        <listest>
+			<equipmenttestid>Mg</equipmenttestid>
+			<listestid>773</listestid>
+			<listestname>Magnesium</listestname>
+		</listest>	
+        <listest>
+			<equipmenttestid>GLU</equipmenttestid>
+			<listestid>260</listestid>
+			<listestname>Glucose (SI)</listestname>
+		</listest>
+        <listest>
+			<equipmenttestid>GGT</equipmenttestid>
+			<listestid>38</listestid>
+			<listestname>GGT</listestname>
+		</listest>	
+        <listest>
+			<equipmenttestid>LIPA</equipmenttestid>
+			<listestid>773</listestid>
+			<listestname>LIPIDS</listestname>
+		</listest>		
+	</supportedtests>
+</configuration>

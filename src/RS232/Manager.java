@@ -260,6 +260,9 @@ public class Manager  extends RS232Settings {
 
                             switch(EquipmentName.toUpperCase())
                             {
+                            	case "MINI VIDAS":
+                            		MiniVidas.HandleDataInput(buffer);
+                            		break;
                                 case "ABX MICROS 60":
                                      MICROS60.HandleDataInput(buffer);
                                     break;

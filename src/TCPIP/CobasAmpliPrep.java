@@ -16,6 +16,7 @@ import java.util.Queue;
 import log.DisplayMessageType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import system.SampleDataJSON;
@@ -51,7 +52,8 @@ public class CobasAmpliPrep extends Thread{
     private static final char ENQ = 0x05;
     private static final char ETX = 0x03;
     private static final char CR = 0x0D;
-     private static final char LF = 0x0A;
+    private static final char LF = 0x0A;
+    private static final char ETB = 0x17;
    
     private static MODE appMode = MODE.IDLE;
     public enum  MSGTYPE
@@ -341,7 +343,7 @@ public class CobasAmpliPrep extends Thread{
             if(type == MSGTYPE.ENQ)
             {                
                 AddtoQueue(ACK);
-               ASTMMsgs="";
+               //ASTMMsgs="";
                appMode = MODE.RECEIVEING_RESULTS;
             }
             else if(type == MSGTYPE.STX)
@@ -349,69 +351,15 @@ public class CobasAmpliPrep extends Thread{
                 AddtoQueue(ACK);
                ASTMMsgs = ASTMMsgs + "\r"+message;
                appMode = MODE.RECEIVEING_RESULTS;
+               if(ASTMMsgs.endsWith(String.valueOf(EOT)))
+               {
+                   process();
+               }
                 
             }
             else if (type == MSGTYPE.EOT)
-            {
-                //AddtoQueue(ACK);
-                //todo handle results
-                
-                String[] PatientParts = ASTMMsgs.split(String.valueOf(STX)+"[\\d]P");
-                for(int p=1;p<PatientParts.length;p++)
-                {
-
-                    String[] msgParts = PatientParts[p].split(String.valueOf(LF));
-                    String SampleParts[] = msgParts[1].split("\\|");
-
-                   // String patientid = pidParts[3].trim();
-                    String SampleID = SampleParts[2].trim();
-                    if(SampleParts.length > 2)
-                    {
-                        //SampleID = utilities.getSystemDate("YYYY") + SampleID;
-                        //SampleID =  patientid;
-                        int mID=0;
-                        float value = 0;
-                        boolean flag = false;
-                        for(int i=2;i<msgParts.length-1;i++)
-                        {
-                            if(msgParts[i].split("\\|")[0].endsWith("R"))
-                            {
-                                mID = getMeasureID(msgParts[i].split("\\|")[1].trim());
-                                if(mID > 0)
-                                {
-                                    try
-                                    {
-                                        value = Float.parseFloat(msgParts[i].split("\\|")[3]);
-                                    }catch(NumberFormatException e){
-                                        try{
-                                        value = 0;
-                                        }catch(NumberFormatException ex){}
-
-                                    }
-                                    if(SaveResults(SampleID, mID,value))
-                                    {
-                                        flag = true;
-                                    }
-                                }
-                            }
-                        }
-                         if(flag)
-                            {
-                                 log.AddToDisplay.Display("\nResults with Code: "+SampleID +" sent to BLIS sucessfully",DisplayMessageType.INFORMATION);
-                            }
-                            else
-                            {
-                                 log.AddToDisplay.Display("\nTest with Code: "+SampleID +" not Found on BLIS",DisplayMessageType.WARNING);
-                            }
-
-
-                    }
-                }
-                appMode = MODE.IDLE;
-                synchronized(MainForm.set)
-                {
-                    MainForm.set = MainForm.RESET.NOW;
-                }
+            {     
+               process();
                 
             }
             else if (type == MSGTYPE.NAK)
@@ -425,11 +373,6 @@ public class CobasAmpliPrep extends Thread{
                     if(PatientTest.size()>0)
                     {
                         AddtoQueue(PatientTest.poll());
-                        /*while(PatientTest.size() > 0)
-                        {
-                            AddtoQueue(PatientTest.poll());
-                        }*/
-                        //AddtoQueue(EOT);
                     }
                     else
                     {
@@ -445,7 +388,7 @@ public class CobasAmpliPrep extends Thread{
                 
                
                
-            }          
+            }         
             
         }catch(Exception ex)
         {
@@ -456,6 +399,145 @@ public class CobasAmpliPrep extends Thread{
        
     }
     
+    private static void process()
+      {        
+          
+           if(!ASTMMsgs.isEmpty())
+            {
+                   ASTMMsgs = ASTMMsgs.replaceAll(String.valueOf(STX)+"[\\d]", "");
+                   ASTMMsgs = ASTMMsgs.replaceAll(String.valueOf(ETB) + String.valueOf(CR), "");
+                   
+                   String[] PatientParts = ASTMMsgs.trim().split("L\\|1\\|N"+String.valueOf(CR));
+                    for(int p=0;p<PatientParts.length;p++)
+                    {
+                        String[] msgParts = PatientParts[p].trim().split("\r");
+                         int id=0;
+                         if(msgParts.length == 3)
+                             id =1;
+                         else
+                             id =2;
+                        String pidParts[] = msgParts[id].split("\\|");
+                        if(pidParts.length > 4)
+                        {
+                            if("Q".equals(pidParts[0].trim()))
+                            {
+                                 String patientid = pidParts[2].split("\\^")[0].trim();   
+                                 if(!patientid.equalsIgnoreCase("ALL"))
+                                 {
+                                    String SampleID = pidParts[2].split("\\^")[1].trim();
+                                     getBLISTests(SampleID,true);
+                                 }
+                                 else
+                                 {
+                                     appMode = MODE.SENDING_QUERY;
+                                     AddtoQueue(ENQ);
+                                     noDataResponse();
+                                     log.AddToDisplay.Display("Fetching of All samples not enabled",DisplayMessageType.INFORMATION);
+                                      appMode = MODE.IDLE;
+                                 }
+                                  
+                            }
+                            else if("C".equals(pidParts[0].trim()))
+                            {
+                                log.AddToDisplay.Display("last request has been cancelled by Cobas AmpliPrep",DisplayMessageType.INFORMATION);
+                                 appMode = MODE.IDLE;
+                                synchronized(MainForm.set)
+                                {
+                                    MainForm.set = MainForm.RESET.NOW;
+                                }
+                            }
+                            else
+                            {
+                                pidParts = msgParts[2].split("\\|");
+                                String patientid = "";
+                                if(msgParts[1].split("\\|").length > 4)
+                                {
+                                    patientid = msgParts[1].split("\\|")[4].trim();
+
+                                }
+                                
+                                String SampleID = pidParts[2].split("\\^")[0].trim(); 
+                                
+                                String testdate = utilities.formatAsDate("yyyyMMddhhmmss", pidParts[6].trim()); 
+                               
+                                int mID=0;
+                                String  value = "";
+                                boolean flag = false;
+                                
+                                
+                                    for(int i=0;i<msgParts.length;i++)
+                                    {
+                                        if(msgParts[i].split("\\|")[0].endsWith("R"))
+                                        {
+                                            mID = getMeasureID(msgParts[i].split("\\|")[2].split("\\^")[3].trim());
+                                          
+                                            if(mID > 0)
+                                            {   
+                                                try
+                                                { 
+                                                    value = msgParts[i].split("\\|")[3].trim();
+                                                    
+                                                }catch(ArrayIndexOutOfBoundsException ex)
+                                                { 
+                                                  continue;
+                                                }
+                                               
+                                                if(SaveResults(SampleID, mID,value))
+                                                {
+                                                    log.AddToDisplay.Display("\nSent to bliss:  Specimen ID: ["+SampleID +"]",DisplayMessageType.INFORMATION);
+                                                }
+                                                else
+                                                {
+                                                    log.AddToDisplay.Display("\nError  Specimen ID: ["+SampleID +"] could not be queued",DisplayMessageType.WARNING);
+                                                }
+                                                        
+                                            }
+                                        }
+                                    }
+                                    
+                                 }
+                                
+                                
+                            }
+
+                        appMode = MODE.IDLE;
+                        synchronized(MainForm.set)
+                        {
+                            MainForm.set = MainForm.RESET.NOW;
+                        }
+                        ASTMMsgs="";
+
+                        }
+                                              
+            }
+           
+        }
+    
+    private static void noDataResponse()
+   {
+       Random rand = new Random();
+
+       PatientTest.clear();
+       StringBuffer strData = new StringBuffer();
+       strData.append(STX); 
+       StringBuffer strTemp = new StringBuffer();
+       strTemp.append("1H|@^\\|");
+       strTemp.append(rand.nextInt(999999));
+       strTemp.append("||BLIS|||||GeneXpert PC^GeneXpert^4.3||P|1394-97|");       
+       strTemp.append(utilities.getSystemDate("yyyyMMddHHmmss"));
+       strTemp.append(CR);   
+       strTemp.append("L");
+       strTemp.append("|");
+       strTemp.append(1);
+       strTemp.append("|I");
+       strTemp.append(CR);            
+       strTemp.append(ETX);  
+       strData.append(strTemp.toString());
+       strData.append(utilities.getCheckSum(strTemp.toString()));
+       strData.append(CR);
+       strData.append(LF); 
+       PatientTest.add(strData.toString());  
+   }
     private static MSGTYPE getMessageType(String msg)
     {
         MSGTYPE type = null;
@@ -559,12 +641,12 @@ public class CobasAmpliPrep extends Thread{
          return equipmentID;
      }
      
-    private static boolean SaveResults(String barcode,int MeasureID, float value)
+    private static boolean SaveResults(String barcode,int MeasureID, String value)
      {
          
          
           boolean flag = false;       
-          if("1".equals(BLIS.blis.saveResults(barcode,MeasureID,value,0)))
+          if("1".equals(BLIS.blis.saveResults(barcode,MeasureID,value)))
            {
               flag = true;
             }

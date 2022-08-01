@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -80,6 +81,8 @@ public class MainForm extends javax.swing.JFrame {
     TEXT.BT3000PlusChameleonEnvoy objbtenvoy = null;
     MindrayBC2800 objmin2800 = null;
     BT3000Plus objbt3000 = null;
+    MiniVidas objminividas = null;
+    MindrayBC5000 objmin5000 = null;
 
     //public static boolean reset = false;
    public static enum RESET
@@ -97,7 +100,8 @@ public class MainForm extends javax.swing.JFrame {
 
     private void initTray()
     {
-         if (SystemTray.isSupported()) {
+         if (SystemTray.isSupported()) 
+         {
             sysTray = SystemTray.getSystemTray();
             
             //create icon image
@@ -170,6 +174,10 @@ public class MainForm extends javax.swing.JFrame {
             catch(AWTException e) {
                System.out.println(e.getMessage());
             }
+        }
+        else
+        {
+             System.out.println("System Tray not supported");
         }
     }
     /**
@@ -378,8 +386,12 @@ public class MainForm extends javax.swing.JFrame {
 
     private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
         // TODO add your handling code here:
-        setVisible(false);
-        item3.setLabel("Show Interface");
+        if(SystemTray.isSupported())
+        {
+            setVisible(false);
+            item3.setLabel("Show Interface");
+        }
+        
     }//GEN-LAST:event_formWindowLostFocus
 
     private void jbtnDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnDownloadActionPerformed
@@ -400,13 +412,21 @@ public class MainForm extends javax.swing.JFrame {
       {
         startAppropriateHandler();
         jbtnStart.setText("Stop");
-        item2.setLabel("Stop");
+        if(SystemTray.isSupported())
+        {
+            item2.setLabel("Stop");
+        }
+        
       }
       else
       {   
           stopAppropriateHandler();
           jbtnStart.setText("Start");
-          item2.setLabel("Start");
+          if(SystemTray.isSupported())
+          {
+              item2.setLabel("Start");
+          }
+          
       }
     }
     
@@ -491,6 +511,9 @@ public class MainForm extends javax.swing.JFrame {
             case "RS232":
                 switch(jlblEquipment.getText().toUpperCase())
                 {
+                	case "MINI VIDAS":
+                		objminividas.Stop();
+                	break;
                     case "ABX MICROS 60":                        
                         abx.Stop();
                         break;
@@ -569,6 +592,9 @@ public class MainForm extends javax.swing.JFrame {
                      case "MINDRAY BS-240":                          
                           objminbs240.Stop();
                           break;
+                    case "MINDRAY BC-5000":
+                          objmin5000.Stop();
+                          break;
                 }
                 break;
             case "MSACCESS":
@@ -605,6 +631,10 @@ public class MainForm extends javax.swing.JFrame {
             case "RS232":
                 switch(jlblEquipment.getText().toUpperCase())
                 {
+                	case "MINI VIDAS":
+                		objminividas = new MiniVidas();
+                		objminividas.start();
+                		break;
                     case "ABX MICROS 60":
                         abx  = new MICROS60();
                         abx.start();                          
@@ -707,6 +737,10 @@ public class MainForm extends javax.swing.JFrame {
                           objminbs240 = new MindrayBS240();
                           objminbs240.start();
                           break;
+                      case "MINDRAY BC-5000":
+                          objmin5000 = new MindrayBC5000();
+                          objmin5000.start();
+                          break;
                           
                           
                 }
@@ -782,13 +816,26 @@ public class MainForm extends javax.swing.JFrame {
         
          equipment = configuration.configuration.GetParameterValue(configuration.configuration.EQUIPMENT);
          jlblEquipment.setText(equipment);
-         trayIcon.setToolTip(trayIcon.getToolTip()+" ("+equipment +" handler)");
          configuration.configuration.EQUIPMENT_NAME = equipment;
          
           value = configuration.configuration.GetParameterValue(configuration.configuration.MISCELLANEOUS);
           String[] misc = value.split(",");
           setParams(misc);
-        
+          
+          try
+          {
+            if(SystemTray.isSupported())
+            {
+                 trayIcon.setToolTip(trayIcon.getToolTip()+" ("+equipment +" handler)");
+            }
+              
+               
+          }catch(Exception e)
+          {
+              System.out.println(e);
+          }
+          
+         
          
    }
     private void setParams(String[] values)

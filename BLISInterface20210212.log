@@ -1,0 +1,6 @@
+2021-02-12 08:08:53: MINI VIDAS  handler started...
+2021-02-12 08:08:53: Checking available ports on this system...
+2021-02-12 08:08:53: Avaliable ports:
+2021-02-12 08:08:53: Now connecting to port /dev/tty.usbserial-1410
+2021-02-12 08:08:53: Port name - /dev/tty.usbserial-1410; Method name - openPort(); Exception type - Port not found.
+2021-02-12 08:08:53: Port name - /dev/tty.usbserial-1410; Method name - openPort(); Exception type - Port not found.

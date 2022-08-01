@@ -1,0 +1,26 @@
+2021-02-08 20:37:10: BT 3000Plus Chameleon handler started...
+2021-02-08 20:37:10: Checking available ports on this system...
+2021-02-08 20:37:10: Avaliable ports:
+2021-02-08 20:37:10: Now connecting to port /dev/tty.usbserial-1410
+2021-02-08 20:37:10: Port name - /dev/tty.usbserial-1410; Method name - openPort(); Exception type - Port not found.
+2021-02-08 20:37:10: Port name - /dev/tty.usbserial-1410; Method name - openPort(); Exception type - Port not found.
+2021-02-08 20:39:17: Port Closed sucessfully
+2021-02-08 20:39:18: Port Closed sucessfully
+2021-02-08 20:41:25: BT 3000Plus Chameleon handler started...
+2021-02-08 20:41:25: Checking available ports on this system...
+2021-02-08 20:41:25: Avaliable ports:
+2021-02-08 20:41:25: Now connecting to port /dev/tty.usbserial-1410
+2021-02-08 20:41:25: Port name - /dev/tty.usbserial-1410; Method name - openPort(); Exception type - Port not found.
+2021-02-08 20:41:25: Port name - /dev/tty.usbserial-1410; Method name - openPort(); Exception type - Port not found.
+2021-02-08 20:46:39: BT3000 Plus handler started...
+2021-02-08 20:46:39: Checking available ports on this system...
+2021-02-08 20:46:39: Avaliable ports:
+2021-02-08 20:46:39: Now connecting to port /dev/tty.usbserial-1410
+2021-02-08 20:46:39: Port name - /dev/tty.usbserial-1410; Method name - openPort(); Exception type - Port not found.
+2021-02-08 20:46:39: Port name - /dev/tty.usbserial-1410; Method name - openPort(); Exception type - Port not found.
+2021-02-08 20:53:57: BT3000 Plus handler started...
+2021-02-08 20:53:57: Checking available ports on this system...
+2021-02-08 20:53:57: Avaliable ports:
+2021-02-08 20:53:57: Now connecting to port /dev/tty.usbserial-1410
+2021-02-08 20:53:57: Port name - /dev/tty.usbserial-1410; Method name - openPort(); Exception type - Port not found.
+2021-02-08 20:53:57: Port name - /dev/tty.usbserial-1410; Method name - openPort(); Exception type - Port not found.

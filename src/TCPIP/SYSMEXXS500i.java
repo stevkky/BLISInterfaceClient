@@ -43,7 +43,7 @@ public class SYSMEXXS500i extends Thread{
     //Queue<String> InQueue=new LinkedList<>();
   
     
-     public enum  MSGTYPE
+    public enum  MSGTYPE
     {
         QUERY(0),
         RESULTS(1),
