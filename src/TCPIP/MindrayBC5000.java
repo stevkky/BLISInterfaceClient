@@ -230,14 +230,14 @@ public class MindrayBC5000 extends Thread
                     int mID=0;
                     float value = 0;
                     boolean flag = false;
-                    for(int i=8;i<=31;i++)
+                    for(int i=8;i<msgParts.length;i++)
                     {
                             mID = getMeasureID(msgParts[i].split("\\|")[1]);
                             if(mID > 0)
                             {
                                 try
                                 {
-                                    value = Float.parseFloat(msgParts[i].split("\\|")[3]);
+                                    value = Float.parseFloat(msgParts[i].split("\\|")[5]);
                                 }catch(NumberFormatException e){
                                     try{
                                         continue;
