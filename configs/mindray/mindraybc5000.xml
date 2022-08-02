@@ -17,118 +17,118 @@
 	<supportedtests>
 		<listest>
 			<equipmenttestid>5</equipmenttestid>
-			<listestid>41</listestid>
+			<listestid>69</listestid>
 			<listestname>WBC</listestname>
 		</listest>	
 		<listest>
 			<equipmenttestid>6</equipmenttestid>
-			<listestid>47</listestid>
+			<listestid>90</listestid>
 			<listestname>BAS#</listestname>
 		</listest>	
 		<listest>
 			<equipmenttestid>7</equipmenttestid>
-			<listestid>48</listestid>
+			<listestid>82</listestid>
 			<listestname>BAS%</listestname>
 		</listest>	
 		<listest>
 			<equipmenttestid>8</equipmenttestid>
-			<listestid>49</listestid>
+			<listestid>88</listestid>
 			<listestname>NEU#</listestname>
 		</listest>	
 		<listest>
 			<equipmenttestid>9</equipmenttestid>
-			<listestid>50</listestid>
+			<listestid>78</listestid>
 			<listestname>NEU%</listestname>
 		</listest>	
 		<listest>
 			<equipmenttestid>10</equipmenttestid>
-			<listestid>51</listestid>
+			<listestid>91</listestid>
 			<listestname>EOS#</listestname>
 		</listest>	
 		<listest>
 			<equipmenttestid>11</equipmenttestid>
-			<listestid>52</listestid>
+			<listestid>81</listestid>
 			<listestname>EOS%</listestname>
 		</listest>	
 		<listest>
 			<equipmenttestid>12</equipmenttestid>
-			<listestid>53</listestid>
+			<listestid>89</listestid>
 			<listestname>LYM#</listestname>
 		</listest>
 		<listest>
 			<equipmenttestid>13</equipmenttestid>
-			<listestid>490</listestid>
+			<listestid>79</listestid>
 			<listestname>LYM%</listestname>
 		</listest>		
 		<listest>
 			<equipmenttestid>14</equipmenttestid>
-			<listestid>54</listestid>
+			<listestid>87</listestid>
 			<listestname>MON#</listestname>
 		</listest>	
 		<listest>
 			<equipmenttestid>15</equipmenttestid>
-			<listestid>55</listestid>
+			<listestid>80</listestid>
 			<listestname>MON%</listestname>
 		</listest>
 		<listest>
 			<equipmenttestid>16</equipmenttestid>
-			<listestid>491</listestid>
+			<listestid>70</listestid>
 			<listestname>RBC</listestname>
 		</listest>
 		<listest>
 			<equipmenttestid>17</equipmenttestid>
-			<listestid>492</listestid>
+			<listestid>60</listestid>
 			<listestname>HGB</listestname>
 		</listest>
 		<listest>
 			<equipmenttestid>18</equipmenttestid>
-			<listestid>476</listestid>
+			<listestid>72</listestid>
 			<listestname>MCV</listestname>
 		</listest>	
 		<listest>
 			<equipmenttestid>19</equipmenttestid>
-			<listestid>486</listestid>
+			<listestid>73</listestid>
 			<listestname>MCH</listestname>
 		</listest>
 		<listest>
 			<equipmenttestid>20</equipmenttestid>
-			<listestid>487</listestid>
+			<listestid>74</listestid>
 			<listestname>MCHC</listestname>
 		</listest>	
 		<listest>
 			<equipmenttestid>21</equipmenttestid>
-			<listestid>43</listestid>
+			<listestid>333</listestid>
 			<listestname>RDW-CV</listestname>
 		</listest>
 		<listest>
 			<equipmenttestid>22</equipmenttestid>
-			<listestid>488</listestid>
+			<listestid>332</listestid>
 			<listestname>RDW-SD</listestname>
 		</listest>
 		<listest>
 			<equipmenttestid>23</equipmenttestid>
-			<listestid>489</listestid>
+			<listestid>71</listestid>
 			<listestname>HCT</listestname>
 		</listest>		
 		<listest>
 			<equipmenttestid>24</equipmenttestid>
-			<listestid>489</listestid>
+			<listestid>75</listestid>
 			<listestname>PLT</listestname>
 		</listest>		
 		<listest>
 			<equipmenttestid>25</equipmenttestid>
-			<listestid>489</listestid>
+			<listestid>77</listestid>
 			<listestname>MPV</listestname>
 		</listest>		
 		<listest>
 			<equipmenttestid>26</equipmenttestid>
-			<listestid>489</listestid>
+			<listestid>76</listestid>
 			<listestname>PDW</listestname>
 		</listest>		
 		<listest>
 			<equipmenttestid>27</equipmenttestid>
-			<listestid>489</listestid>
+			<listestid>0</listestid>
 			<listestname>PCT</listestname>
-		</listest>		
+		</listest>
 	</supportedtests>
 </configuration>

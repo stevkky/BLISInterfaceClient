@@ -219,14 +219,11 @@ public class MindrayBC5000 extends Thread
             String[] msgParts = message.split("\r");
             if (type == MSGTYPE.RESULTS)
             {
-                //todo handle results
-                String pidParts[] = msgParts[1].split("\\|");
-                if(pidParts.length > 5)
-                {
+              
                     //String patientid = pidParts[4];
                     String SampleID = msgParts[3].split("\\|")[3].trim();
                     //SampleID = utilities.getSystemDate("YYYY") + SampleID;
-                    //SampleID =  patientid;
+                    //SampleID ="20220802006";
                     int mID=0;
                     float value = 0;
                     boolean flag = false;
@@ -250,6 +247,7 @@ public class MindrayBC5000 extends Thread
                                 }
                             }
                     }
+                    
                      if(flag)
                         {
                              log.AddToDisplay.Display("\nResults with Code: "+SampleID +" sent to BLIS sucessfully",DisplayMessageType.INFORMATION);
@@ -260,11 +258,7 @@ public class MindrayBC5000 extends Thread
                         }
 
 
-                }
-                else
-                {
-                    log.AddToDisplay.Display("QC or BACKGROUND CHECK information Skipped",DisplayMessageType.INFORMATION);
-                }
+                
 
             }
         }catch(Exception ex)
@@ -305,10 +299,11 @@ public class MindrayBC5000 extends Thread
          
          
           boolean flag = false;       
-          if("1".equals(BLIS.blis.saveResults(barcode,MeasureID,value,0)))
+          String send = BLIS.blis.saveResults(barcode,MeasureID,value,0);
+          if(send.equalsIgnoreCase("1"))
            {
               flag = true;
-            }
+           }
                           
          return flag;
          

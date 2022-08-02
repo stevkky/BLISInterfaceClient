@@ -170,6 +170,7 @@ public class blis {
                  
                 
                 URL burl = new URL(url);  
+                log.logger.Logger(url);
                  
                  try (BufferedReader in = new BufferedReader(new InputStreamReader(burl.openStream()))) 
                   {
