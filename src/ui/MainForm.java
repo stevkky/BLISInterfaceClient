@@ -83,6 +83,7 @@ public class MainForm extends javax.swing.JFrame {
     BT3000Plus objbt3000 = null;
     MiniVidas objminividas = null;
     MindrayBC5000 objmin5000 = null;
+    MindrayBS230 objminbs230 = null;
 
     //public static boolean reset = false;
    public static enum RESET
@@ -595,6 +596,9 @@ public class MainForm extends javax.swing.JFrame {
                     case "MINDRAY BC-5000":
                           objmin5000.Stop();
                           break;
+                    case "MINDRAY BS-230":
+                          objminbs230.Stop();
+                          break;
                 }
                 break;
             case "MSACCESS":
@@ -740,6 +744,10 @@ public class MainForm extends javax.swing.JFrame {
                       case "MINDRAY BC-5000":
                           objmin5000 = new MindrayBC5000();
                           objmin5000.start();
+                          break;
+                      case "MINDRAY BS-230":
+                          objminbs230 = new MindrayBS230();
+                          objminbs230.start();
                           break;
                           
                           

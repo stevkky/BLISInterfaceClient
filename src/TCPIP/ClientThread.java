@@ -57,7 +57,7 @@ class ClientThread extends Thread
                  
                     read = "";
                     if(this.Equipmentname.equalsIgnoreCase("Mindray BS-200E") || this.Equipmentname.equalsIgnoreCase("Mindray BS-300") || this.Equipmentname.equalsIgnoreCase("Mindray BC-3600")
-                            || this.Equipmentname.equalsIgnoreCase("Mindray BC-5380") || this.Equipmentname.equalsIgnoreCase("Mindray BS-240") || this.Equipmentname.equalsIgnoreCase("Mindray BC-5000"))
+                            || this.Equipmentname.equalsIgnoreCase("Mindray BC-5380") || this.Equipmentname.equalsIgnoreCase("Mindray BS-240") || this.Equipmentname.equalsIgnoreCase("Mindray BC-5000") || this.Equipmentname.equalsIgnoreCase("Mindray BS-230"))
                     {
                         while((input = inFromEquipment.readLine()).length()> 1)
                         {
@@ -246,6 +246,8 @@ class ClientThread extends Thread
                         case "Mindray BC-5000":
                             TCPIP.MindrayBC5000.handleMessage(read);
                             break;
+                        case "Mindray BS-230":
+                            TCPIP.MindrayBS230.handleMessage(read);
                                 
                     }   
                   }
