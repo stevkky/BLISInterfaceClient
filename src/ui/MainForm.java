@@ -84,6 +84,7 @@ public class MainForm extends javax.swing.JFrame {
     MiniVidas objminividas = null;
     MindrayBC5000 objmin5000 = null;
     MindrayBS230 objminbs230 = null;
+    CaretiumXI921F objcarexi921f = null;
 
     //public static boolean reset = false;
    public static enum RESET
@@ -512,8 +513,11 @@ public class MainForm extends javax.swing.JFrame {
             case "RS232":
                 switch(jlblEquipment.getText().toUpperCase())
                 {
-                	case "MINI VIDAS":
-                		objminividas.Stop();
+                    case "CARETIUM XI-921F":
+                        objcarexi921f.Stop();
+                        break;
+                    case "MINI VIDAS":
+                	objminividas.Stop();
                 	break;
                     case "ABX MICROS 60":                        
                         abx.Stop();
@@ -635,10 +639,14 @@ public class MainForm extends javax.swing.JFrame {
             case "RS232":
                 switch(jlblEquipment.getText().toUpperCase())
                 {
-                	case "MINI VIDAS":
-                		objminividas = new MiniVidas();
-                		objminividas.start();
-                		break;
+                    case "CARETIUM XI-921F":
+                        objcarexi921f = new CaretiumXI921F();
+                        objcarexi921f.start();
+                        break;
+                    case "MINI VIDAS":
+                        objminividas = new MiniVidas();
+                        objminividas.start();
+                        break;
                     case "ABX MICROS 60":
                         abx  = new MICROS60();
                         abx.start();                          

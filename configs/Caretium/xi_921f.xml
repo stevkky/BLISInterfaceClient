@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by Stephen Adjei-Kyei -->
+<configuration>
+	<supportedtestTypes>
+		<testtype>		
+			<testtypeid>*</testtypeid>
+			<testtypename>*</testtypename>
+		</testtype>			
+	</supportedtestTypes>
+	<supportedsamples>		
+		<sample>
+			<equipmentsampleid>1</equipmentsampleid>
+			<lissampleid>22</lissampleid>
+			<samplename>serum</samplename>
+		</sample>		
+	</supportedsamples>
+	<supportedtests>
+		<listest>
+			<equipmenttestid>3</equipmenttestid>
+			<listestid>522</listestid>
+			<listestname>K</listestname>
+		</listest>	
+		<listest>
+			<equipmenttestid>4</equipmenttestid>
+			<listestid>523</listestid>
+			<listestname>Na</listestname>
+		</listest>
+		<listest>
+			<equipmenttestid>5</equipmenttestid>
+			<listestid>524</listestid>
+			<listestname>Cl</listestname>
+		</listest>	
+	</supportedtests>
+</configuration>

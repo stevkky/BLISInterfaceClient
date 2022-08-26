@@ -291,6 +291,9 @@ public class Manager  extends RS232Settings {
                                 case "MINDRAY BC-2800":
                                     MindrayBC2800.HandleDataInput(buffer);
                                     break;
+                                case "CARETIUM XI-921F":
+                                    CaretiumXI921F.HandleDataInput(buffer);
+                                    break;
                                     
                             }
                       

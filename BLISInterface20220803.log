@@ -1,20 +1,0 @@
-2022-08-03 15:41:41: New message recieved
-2022-08-03 15:41:41: MSH|^~\&|||||20220803164644||ORU^R01|111|P|2.3.1||||2||ASCII|||<::>OBR|111||Ca|^|Serum|20220118165604|20220118163251|20220118171243|||1|1|ELITROL I|01-1140-03|20221230||M|2.140000|0.260000|2.656870|mmol/L|||||||||||||||||||||||||||<::>
-2022-08-03 15:41:44: New message added to sending queue
-MSH|^~\&|||GHSS|BLIS|20220803154144||ACK^R01|111|P|2.3.1||||2||ASCII|||MSA|AA|111|Message accepted|||0|
-2022-08-03 15:41:44: Message found in sending queue
-2022-08-03 15:41:44: MSH|^~\&|||GHSS|BLIS|20220803154144||ACK^R01|111|P|2.3.1||||2||ASCII|||MSA|AA|111|Message accepted|||0|sent successfully
-2022-08-03 15:42:53: Mindray BS-230 handler started...
-2022-08-03 15:42:53: Starting Server socket on port 5100
-2022-08-03 15:42:53: Waiting for Equipment connection...
-2022-08-03 15:42:53: Listening on port 5100...
-2022-08-03 15:43:18: Mindray BS-230 is now Connected...
-2022-08-03 15:43:18: Client thread has started
-2022-08-03 15:43:18: Client thread has started
-2022-08-03 15:43:32: New message recieved
-2022-08-03 15:43:32: MSH|^~\&|||||20220803164835||ORU^R01|117|P|2.3.1||||2||ASCII|||<::>OBR|117||Ca|^|Serum|20220118165604|20220118163251|20220118171243|||1|1|ELITROL I|01-1140-03|20221230||M|2.140000|0.260000|2.656870|mmol/L|||||||||||||||||||||||||||<::>
-2022-08-03 15:43:32: New message added to sending queue
-MSH|^~\&|||GHSS|BLIS|20220803154332||ACK^R01|117|P|2.3.1||||2||ASCII|||MSA|AA|117|Message accepted|||0|
-2022-08-03 15:43:32: Message found in sending queue
-2022-08-03 15:43:32: MSH|^~\&|||GHSS|BLIS|20220803154332||ACK^R01|117|P|2.3.1||||2||ASCII|||MSA|AA|117|Message accepted|||0|sent successfully
-2022-08-03 15:43:53: http://192.168.10.1/blisgh/api/update_result.php?username=01334&password=Pa55w0rd&specimen_id=01-1140-03&measure_id=1&result=2.65687&dec=0

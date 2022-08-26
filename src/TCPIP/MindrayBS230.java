@@ -82,7 +82,7 @@ public class MindrayBS230 extends Thread{
                 client.start();
                 String message ;
                 outToEquipment= new DataOutputStream(connSock.getOutputStream());
-                setTestIDs();
+                
                 while(!stopped)
                 {                 
                     synchronized(OutQueue)
@@ -218,6 +218,7 @@ public class MindrayBS230 extends Thread{
                     String patientid = pidParts[14];
                     String SampleID = patientid;
                     
+                    //SampleID = "20220805011";
                     
                     if(SampleID.isEmpty())
                     {
@@ -233,10 +234,9 @@ public class MindrayBS230 extends Thread{
                    
                             if(pidParts[0].startsWith("OBR"))
                             {
-                                  try
+                                   try
                                   {
-                                    mID = getMeasureID(pidParts[3].trim());
-                                    
+                                    mID = Integer.parseInt(pidParts[2]);
                                   }catch(NumberFormatException ex){
                                     mID =0;
                                   }
@@ -299,19 +299,7 @@ public class MindrayBS230 extends Thread{
          return measureid;
      }
     
-    private void setTestIDs()
-     {
-         String equipmentid = getSpecimenTestFilter(3);
-         String blismeasureid = getSpecimenTestFilter(2);
-        
-         String[] equipmentids = equipmentid.split(",");
-         String[] blismeasureids = blismeasureid.split(",");
-         for(int i=0;i<equipmentids.length;i++)
-         {
-             testIDs.add(equipmentids[i]+";"+blismeasureids[i]);             
-         }
-        
-     }
+   
     
     private static String getSpecimenFilter(int whichdata)
     {
